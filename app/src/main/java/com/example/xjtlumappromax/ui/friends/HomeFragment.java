@@ -1,4 +1,4 @@
-package com.example.xjtlumappromax.ui.home;
+package com.example.xjtlumappromax.ui.friends;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
