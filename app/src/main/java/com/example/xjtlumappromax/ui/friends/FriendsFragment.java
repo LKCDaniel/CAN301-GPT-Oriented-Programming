@@ -1,4 +1,4 @@
-package com.example.xjtlumappromax.ui.chat;
+package com.example.xjtlumappromax.ui.friends;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.xjtlumappromax.databinding.FragmentNotificationsBinding;
+import com.example.xjtlumappromax.databinding.FragmentFriendsBinding;
 
-public class NotificationsFragment extends Fragment {
+public class FriendsFragment extends Fragment {
 
-    private FragmentNotificationsBinding binding;
+    private FragmentFriendsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        NotificationsViewModel notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
+        FriendsViewModel friendsViewModel =
+                new ViewModelProvider(this).get(FriendsViewModel.class);
 
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        binding = FragmentFriendsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textFriends;
+        friendsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
