@@ -47,7 +47,7 @@ public class MapFragment extends Fragment {
         final TextView textView = binding.textMap;
 
         InteractiveImageView mapSIP = binding.mapSIP;
-        mapSIP.setBuildingBounds(buildingBounds);
+//        mapSIP.setBuildingBounds(buildingBounds);
 
         mapSIP.setOnBuildingClickListener(building -> {
             Intent intent = new Intent(getContext(), SIP_BS_Activity.class);
