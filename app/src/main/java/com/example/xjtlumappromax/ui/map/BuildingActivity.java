@@ -13,14 +13,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 
-import com.example.xjtlumappromax.databinding.ActivitySipBsBinding;
-import com.example.xjtlumappromax.R;
+import com.example.xjtlumappromax.databinding.ActivityBuildingBinding;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class SIP_BS_Activity extends AppCompatActivity {
+public class BuildingActivity extends AppCompatActivity {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -103,13 +102,13 @@ public class SIP_BS_Activity extends AppCompatActivity {
             return false;
         }
     };
-    private ActivitySipBsBinding binding;
+    private ActivityBuildingBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivitySipBsBinding.inflate(getLayoutInflater());
+        binding = ActivityBuildingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         mVisible = true;

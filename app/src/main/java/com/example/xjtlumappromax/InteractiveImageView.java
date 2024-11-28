@@ -3,6 +3,7 @@ package com.example.xjtlumappromax;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,6 +19,8 @@ public class InteractiveImageView extends AppCompatImageView {
     private ScaleGestureDetector scaleDetector;
     private float lastX, lastY;
     private boolean allPointersUp;
+    private Drawable markerDrawable;
+    private float markerX, markerY;
 
     public InteractiveImageView(Context context) {
         this(context, null);
@@ -47,6 +50,42 @@ public class InteractiveImageView extends AppCompatImageView {
             matrix.postTranslate(dx, dy);
             setImageMatrix(matrix);
         });
+    }
+
+    public void setMarkerDrawable(Drawable drawable, float x, float y) {
+        markerDrawable = drawable;
+        markerX = x;
+        markerY = y;
+        invalidate();
+    }
+
+    public void setMarkerPosition(float x, float y) {
+        markerX = x;
+        markerY = y;
+        invalidate();
+    }
+
+    public void cancelMarker() {
+        markerDrawable = null;
+        invalidate();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (markerDrawable != null) {
+            float[] markerCoords = {markerX * getDrawable().getIntrinsicWidth(), markerY * getDrawable().getIntrinsicHeight()};
+            matrix.mapPoints(markerCoords);
+            int markerWidth = markerDrawable.getIntrinsicWidth();
+            int markerHeight = markerDrawable.getIntrinsicHeight();
+            markerDrawable.setBounds(
+                    (int) (markerCoords[0] - markerWidth / 2),
+                    (int) (markerCoords[1] - markerHeight / 2),
+                    (int) (markerCoords[0] + markerWidth / 2),
+                    (int) (markerCoords[1] + markerHeight / 2)
+            );
+            markerDrawable.draw(canvas);
+        }
     }
 
     @Override
@@ -137,6 +176,8 @@ public class InteractiveImageView extends AppCompatImageView {
         Matrix inverse = new Matrix();
         getImageMatrix().invert(inverse);
         inverse.mapPoints(coords);
+        coords[0] /= getDrawable().getIntrinsicWidth();
+        coords[1] /= getDrawable().getIntrinsicHeight();
         return coords;
     }
 
@@ -171,7 +212,6 @@ public class InteractiveImageView extends AppCompatImageView {
             super.onScaleEnd(detector);
         }
     }
-
 
     private Map<String, float[]> buildingBounds;
 

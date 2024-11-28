@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/fullscreenBackgroundColor"
     android:theme="@style/ThemeOverlay.XJTLUMapProMax.FullscreenContainer"
-    tools:context=".ui.map.SIP_BS_Activity">
+    tools:context=".ui.map.BuildingActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -46,6 +47,13 @@
                 android:text="@string/dummy_button" />
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/InteractiveImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/map_ugly"
+            tools:srcCompat="@tools:sample/avatars" />
     </FrameLayout>
 
 </FrameLayout>
