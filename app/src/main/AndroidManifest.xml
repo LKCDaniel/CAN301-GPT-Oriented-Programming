@@ -24,7 +24,7 @@
             android:label="@string/title_activity_sip_bs"
             android:theme="@style/Theme.XJTLUMapProMax.Fullscreen" />
         <activity
-            android:name="MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>

@@ -1,19 +1,17 @@
+package com.example.xjtlumappromax;
+
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.xjtlumappromax.DatabaseHelper;
-import com.example.xjtlumappromax.DatabaseQueryHelper;
-import com.example.xjtlumappromax.R;
-
 import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "com.example.xjtlumappromax.MainActivity";
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
 
