@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/fullscreenBackgroundColor"
+    android:background="@color/creamy_white"
     android:theme="@style/ThemeOverlay.XJTLUMapProMax.FullscreenContainer"
     tools:context=".ui.map.BuildingActivity">
 
@@ -17,7 +17,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:keepScreenOn="true"
-        android:text="@string/dummy_content"
         android:textColor="?attr/fullscreenTextColor"
         android:textSize="50sp"
         android:textStyle="bold" />
@@ -52,7 +51,7 @@
             android:id="@+id/InteractiveImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/map_ugly"
+            android:src="@drawable/sd5"
             tools:srcCompat="@tools:sample/avatars" />
     </FrameLayout>
 
