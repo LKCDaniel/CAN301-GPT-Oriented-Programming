@@ -55,16 +55,19 @@ public class loginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password);
         forgetTextView = findViewById(R.id.forget);
         loginButton = findViewById(R.id.letgo_button);
-
         // 初始化状态
         loginButton.setEnabled(false); // 初始时按钮禁用
         forgetTextView.setVisibility(View.GONE); // 初始时隐藏 forget
+
+        // 测试专用（上线记得注释掉！）
+        usernameEditText.setText("Bird");
+        passwordEditText.setText("123456");
+        loginButton.setEnabled(true);
 
         // 添加 TextWatcher 来监听用户名和密码的输入变化
         usernameEditText.addTextChangedListener(inputWatcher);
         passwordEditText.addTextChangedListener(inputWatcher);
 
-        Button loginButton = findViewById(R.id.letgo_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,11 +117,4 @@ public class loginActivity extends AppCompatActivity {
         }
     };
 
-    // 校验输入是否合法
-    private boolean isInputValid() {
-        // 判断用户名和密码是否为空，可以在此添加更复杂的验证逻辑
-        String username = usernameEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
-        return !username.isEmpty() && !password.isEmpty();
-    }
 }
