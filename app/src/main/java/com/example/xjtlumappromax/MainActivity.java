@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
+        //先复制和创建数据库
         try {
             dbHelper.createDatabase();  // 创建并复制数据库
             db = dbHelper.openDatabase();  // 打开数据库
@@ -54,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
             for (String data : result) {
                 Log.d(TAG, "Data为: " + data);
             }
+
+            //创建位置location和tracher名字的映射
+            Map<String, String> locationTeacherMap=queryHelper.mapLocationTeacher("Teachers_Basic_Information","Location","Name");
+
+
 
 /*
             // 输出查询结果到控制台

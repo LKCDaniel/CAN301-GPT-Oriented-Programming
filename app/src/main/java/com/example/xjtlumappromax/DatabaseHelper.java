@@ -2,6 +2,7 @@ package com.example.xjtlumappromax;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -12,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -87,6 +90,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return db;
     }
+
+
+
+
 
     // 关闭数据库
     @Override
