@@ -2,52 +2,76 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/creamy_white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/view_more"
-        android:layout_width="309dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="631dp"
-        android:layout_marginEnd="54dp"
-        android:layout_marginBottom="48dp"
-        android:text="View More Details"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
     <ImageView
-        android:id="@+id/close"
-        android:layout_width="46dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="26dp"
-        android:layout_marginEnd="331dp"
-        android:layout_marginBottom="711dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
-
-    <TextView
-        android:id="@+id/Teacher_Name"
-        android:layout_width="227dp"
-        android:layout_height="67dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="97dp"
-        android:layout_marginEnd="150dp"
-        android:layout_marginBottom="621dp"
-        android:text="Name"
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/teacher_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/teacher_photo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@raw/jianjun_chen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.129" />
+
+
+    <TextView
+        android:id="@+id/person_price"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginBottom="120dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/name_text"
+        android:backgroundTint="@color/creamy_white"
+        android:elevation="8dp"
+        android:fontFamily="@font/carterone"
+        android:gravity="center"
+        android:text="#4"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.527" />
+
+    <Button
+        android:id="@+id/view_more"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/buttom_login"
+        android:fontFamily="@font/buenard"
+        android:text="View More Details"
+        android:textAllCaps="false"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.938" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
