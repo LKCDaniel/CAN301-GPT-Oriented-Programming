@@ -1,6 +1,7 @@
 package com.example.xjtlumappromax.ui.map;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -51,6 +52,15 @@ public class MapFragment extends Fragment {
 
         binding = FragmentMapBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        InteractiveImageView mapSIP = binding.mapSIP;
+        mapSIP.setBuildingBounds(buildingBounds);
+
+        mapSIP.setOnBuildingClickListener(building -> {
+            Intent intent = new Intent(getContext(), BuildingActivity.class);
+            intent.putExtra("building", building);
+            startActivity(intent);
+        });
 
         gpsTextView = binding.gpsTextView;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());

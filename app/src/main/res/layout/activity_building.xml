@@ -47,7 +47,7 @@
 
         </LinearLayout>
 
-        <ImageView
+        <com.example.xjtlumappromax.InteractiveImageView
             android:id="@+id/InteractiveImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
