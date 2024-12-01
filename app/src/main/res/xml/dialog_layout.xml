@@ -9,7 +9,7 @@
         android:id="@+id/dialogImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/dialog_icon"/>
+        android:src="@drawable/xjtlu"/>
 
     <TextView
         android:id="@+id/dialogText"

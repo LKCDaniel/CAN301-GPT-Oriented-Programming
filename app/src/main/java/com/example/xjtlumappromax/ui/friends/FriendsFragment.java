@@ -24,8 +24,6 @@ public class FriendsFragment extends Fragment {
         binding = FragmentFriendsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textFriends;
-        friendsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
