@@ -9,11 +9,11 @@
     tools:context=".ui.map.MapFragment">
 
     <com.example.xjtlumappromax.InteractiveImageView
-        android:id="@+id/map_SIP"
+        android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="matrix"
-        android:src="@drawable/map"
+        android:src="@drawable/map_sip"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -30,7 +30,18 @@
         android:layout_margin="16dp"
         tools:ignore="MissingConstraints" />
 
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" -->
+    <SeekBar
+        android:id="@+id/campus_bar"
+        style="@android:style/Widget.Material.SeekBar.Discrete"
+        android:layout_width="151dp"
+        android:layout_height="62dp"
+        android:max="1"
+        android:progress="0"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="170dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:ignore="MissingConstraints"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,11 +39,20 @@
         </LinearLayout>
 
         <com.example.xjtlumappromax.InteractiveImageView
-            android:id="@+id/InteractiveImageView"
+            android:id="@+id/floorMap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/sd5"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <SeekBar
+            android:id="@+id/floorBar"
+            style="@android:style/Widget.DeviceDefault.Light.SeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:max="4"
+            android:progress="4"
+            android:splitTrack="true" />
     </FrameLayout>
 
 </FrameLayout>

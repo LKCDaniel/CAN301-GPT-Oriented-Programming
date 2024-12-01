@@ -4,12 +4,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
@@ -38,11 +37,14 @@ public class MapFragment extends Fragment {
     private TextView gpsTextView;
 
     // left, top, right, bottom
-    private final Map<String, float[]> buildingBounds = Map.of(
+    private final Map<String, float[]> sipBuildings = Map.of(
             "SA", new float[]{0, 0, 0, 0},
             "SB", new float[]{0.2f, 0.2f, 0.5f, 0.5f},
             "SC", new float[]{0, 0, 0, 0},
-            "SD", new float[]{0, 0, 0, 0}
+            "SD", new float[]{0.6f, 0.6f, 1, 1}
+    ), tcBuildings = Map.of(
+            "A", new float[]{0, 0, 0, 0},
+            "Big", new float[]{0.2f, 0.2f, 0.5f, 0.5f}
     );
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -53,10 +55,41 @@ public class MapFragment extends Fragment {
         binding = FragmentMapBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        InteractiveImageView mapSIP = binding.mapSIP;
-        mapSIP.setBuildingBounds(buildingBounds);
+        InteractiveImageView map = binding.map;
+        SeekBar campusBar = binding.campusBar;
+        map.setImageResource(R.drawable.map_sip);
+        map.setBounds(sipBuildings);
 
-        mapSIP.setOnBuildingClickListener(building -> {
+        campusBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                switch(seekBar.getProgress()) {
+                    case 0:
+                        map.setImageResource(R.drawable.map_sip);
+                        map.setBounds(sipBuildings);
+                        break;
+                    case 1:
+                        map.setImageResource(R.drawable.image_test);
+                        map.setBounds(tcBuildings);
+                        break;
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // do nothing
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // do nothing
+            }
+        });
+
+        map.setMarkerDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_location));
+
+
+        map.setOnBoundClickListener(building -> {
             Intent intent = new Intent(getContext(), BuildingActivity.class);
             intent.putExtra("building", building);
             startActivity(intent);
@@ -78,6 +111,10 @@ public class MapFragment extends Fragment {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
                     gpsTextView.setText("Current GPS: " + latitude + ", " + longitude);
+//                    if (!map.isGpsDrawn()) {
+//                        map.setGpsDraw(getResources().getDrawable(R.drawable.ic_location));
+//                    }
+//                    map.setGpsPosition((float) longitude, (float) latitude);
                 }
             }
         };

@@ -12,13 +12,15 @@ import android.os.Looper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
+import android.widget.SeekBar;
 
+import com.example.xjtlumappromax.InteractiveImageView;
+import com.example.xjtlumappromax.R;
 import com.example.xjtlumappromax.databinding.ActivityBuildingBinding;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
+import java.util.Map;
+
+
 public class BuildingActivity extends AppCompatActivity {
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -102,7 +104,21 @@ public class BuildingActivity extends AppCompatActivity {
             return false;
         }
     };
+
     private ActivityBuildingBinding binding;
+    private final Map<String, float[]> SC_5F = Map.of(
+            "540", new float[]{0, 0, 0, 0},
+            "523", new float[]{0.2f, 0.2f, 0.5f, 0.5f},
+            "567", new float[]{0, 0, 0, 0}
+    ), SC_4F = Map.of(
+            "440", new float[]{0, 0, 0, 0},
+            "423", new float[]{0.2f, 0.2f, 0.5f, 0.5f},
+            "467", new float[]{0, 0, 0, 0}
+    ), SA_3F = Map.of(
+            "340", new float[]{0, 0, 0, 0},
+            "323", new float[]{0.2f, 0.2f, 0.5f, 0.5f},
+            "367", new float[]{0, 0, 0, 0}
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +142,85 @@ public class BuildingActivity extends AppCompatActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
+
+        String building = getIntent().getStringExtra("building");
+        InteractiveImageView map = binding.floorMap;
+        SeekBar floorBar = binding.floorBar;
+        floorBar.setProgress(0);
+        map.setImageResource(R.drawable.sd5);
+        map.setBounds(SC_5F);
+
+        switch(building) {
+            case "SA":
+                floorBar.setMax(4);
+                map.setImageResource(R.drawable.image_test); // floor zero, same for all
+                break;
+            case "SB":
+                floorBar.setMax(4);
+                break;
+            case "SC":
+                floorBar.setMax(4);
+                break;
+            case "SD":
+                floorBar.setMax(4);
+                break;
+        }
+
+        floorBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                switch(building){
+                    case "SA":
+                        break;
+                    case "SB":
+                        switch(seekBar.getProgress()) {
+                            case 0:
+                                map.setImageResource(R.drawable.sd5);
+                                map.setBounds(SC_5F);
+                                break;
+                            case 1:
+                                map.setImageResource(R.drawable.image_test);
+                                map.setBounds(SC_4F);
+                                break;
+                            case 2:
+                                map.setImageResource(R.drawable.map_sip);
+                                map.setBounds(SA_3F);
+                                break;
+                        }
+                        break;
+                    case "SC":
+                        // do nothing
+                        break;
+                    case "SD":
+                        switch(seekBar.getProgress()) {
+                            case 0:
+                                map.setImageResource(R.drawable.buttom_letgo);
+                                map.setBounds(SC_5F);
+                                break;
+                            case 1:
+                                map.setImageResource(R.drawable.ic_launcher_background);
+                                map.setBounds(SC_4F);
+                                break;
+                            case 2:
+                                map.setImageResource(R.drawable.rank);
+                                map.setBounds(SA_3F);
+                                break;
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // do nothing
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // do nothing
+            }
+        });
+
     }
 
     @Override

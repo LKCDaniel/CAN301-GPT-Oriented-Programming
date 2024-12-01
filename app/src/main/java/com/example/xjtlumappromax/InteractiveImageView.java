@@ -17,9 +17,8 @@ public class InteractiveImageView extends AppCompatImageView {
 
     private Matrix matrix = new Matrix();
     private ScaleGestureDetector scaleDetector;
-    private float lastX, lastY;
-    private boolean allPointersUp;
-    private Drawable markerDrawable;
+    private float startX, startY, lastX, lastY;
+    private boolean singleFinger, mapMoved;
     private float markerX, markerY;
 
     public InteractiveImageView(Context context) {
@@ -45,47 +44,17 @@ public class InteractiveImageView extends AppCompatImageView {
             float imageHeight = getDrawable().getIntrinsicHeight();
             float scale = Math.min(viewWidth / imageWidth, viewHeight / imageHeight);
             float dx = (viewWidth - imageWidth * scale) / 2;
-            float dy = 0;//(viewHeight - imageHeight * scale) / 2;
+            float dy = (viewHeight - imageHeight * scale) / 2;
             matrix.setScale(scale, scale);
             matrix.postTranslate(dx, dy);
             setImageMatrix(matrix);
         });
     }
 
-    public void setMarkerDrawable(Drawable drawable, float x, float y) {
-        markerDrawable = drawable;
-        markerX = x;
-        markerY = y;
-        invalidate();
-    }
-
-    public void setMarkerPosition(float x, float y) {
-        markerX = x;
-        markerY = y;
-        invalidate();
-    }
-
-    public void cancelMarker() {
-        markerDrawable = null;
-        invalidate();
-    }
-
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (markerDrawable != null) {
-            float[] markerCoords = {markerX * getDrawable().getIntrinsicWidth(), markerY * getDrawable().getIntrinsicHeight()};
-            matrix.mapPoints(markerCoords);
-            int markerWidth = markerDrawable.getIntrinsicWidth();
-            int markerHeight = markerDrawable.getIntrinsicHeight();
-            markerDrawable.setBounds(
-                    (int) (markerCoords[0] - markerWidth / 2),
-                    (int) (markerCoords[1] - markerHeight / 2),
-                    (int) (markerCoords[0] + markerWidth / 2),
-                    (int) (markerCoords[1] + markerHeight / 2)
-            );
-            markerDrawable.draw(canvas);
-        }
+    public void setImageResource(int resId) {
+        super.setImageResource(resId);
+        init(getContext());
     }
 
     @Override
@@ -94,14 +63,15 @@ public class InteractiveImageView extends AppCompatImageView {
         final int action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                lastX = event.getX();
-                lastY = event.getY();
-                allPointersUp = true;
+                startX = lastX = event.getX();
+                startY = lastY = event.getY();
+                singleFinger = true;
+                mapMoved = false;
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 lastX = (event.getX(0) + event.getX(1)) / 2;
                 lastY = (event.getY(0) + event.getY(1)) / 2;
-                allPointersUp = false;
+                singleFinger = false;
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx, dy;
@@ -156,15 +126,18 @@ public class InteractiveImageView extends AppCompatImageView {
 
                 matrix.postTranslate(dx, dy);
                 setImageMatrix(matrix);
+                if (!mapMoved && ((Math.abs(event.getX(0) - startX) + Math.abs(event.getY(0) - startY)) > 10)) {
+                    mapMoved = true;
+                }
                 break;
             case MotionEvent.ACTION_UP:
-                if (allPointersUp) {
+                if (singleFinger && !mapMoved) {
                     float[] imageCoords = getImageCords(event.getX(), event.getY());
                     Log.i("InteractiveImageView", "image coords - x: " +
                             imageCoords[0] + ", y: " + imageCoords[1]);
-                    String building = getBuilding(imageCoords[0], imageCoords[1]);
-                    if (building != null && onBuildingClickListener != null) {
-                        onBuildingClickListener.onBuildingClick(building);
+                    String boundName = getBound(imageCoords[0], imageCoords[1]);
+                    if (boundName != null && onBoundClickListener != null) {
+                        onBoundClickListener.onBoundClick(boundName);
                     }
                 }
         }
@@ -182,6 +155,76 @@ public class InteractiveImageView extends AppCompatImageView {
     }
 
 
+    private Drawable gpsDrawable, markerDrawable;
+
+    public void setGpsDraw(Drawable drawable) {
+        gpsDrawable = drawable;
+        invalidate();
+    }
+
+    public void setGpsPosition(float x, float y) {
+        markerX = x;
+        markerY = y;
+        invalidate();
+    }
+
+    public void cancelGpsDraw() {
+        gpsDrawable = null;
+        invalidate();
+    }
+
+    public boolean isGpsDrawn() {
+        return gpsDrawable != null;
+    }
+
+    public void setMarkerDraw(Drawable drawable) {
+        markerDrawable = drawable;
+        invalidate();
+    }
+
+    public void cancelMarkerDraw() {
+        markerDrawable = null;
+        invalidate();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (gpsDrawable != null) {
+            float[] gpsCords = {markerX * getDrawable().getIntrinsicWidth(), markerY * getDrawable().getIntrinsicHeight()};
+            matrix.mapPoints(gpsCords);
+            int drawableWidth = gpsDrawable.getIntrinsicWidth();
+            int drawableHeight = gpsDrawable.getIntrinsicHeight();
+            gpsDrawable.setBounds(
+                    (int) (gpsCords[0] - drawableWidth / 2),
+                    (int) (gpsCords[1] - drawableHeight / 2),
+                    (int) (gpsCords[0] + drawableWidth / 2),
+                    (int) (gpsCords[1] + drawableHeight / 2)
+            );
+            gpsDrawable.draw(canvas);
+        }
+        if (markerDrawable != null && bounds != null) {
+            for (String boundName : bounds.keySet()) {
+                float[] bounds = this.bounds.get(boundName);
+                float[] markerCords = {
+                        (bounds[0] + bounds[2]) / 2 * getDrawable().getIntrinsicWidth(),
+                        (bounds[1] + bounds[3]) / 2 * getDrawable().getIntrinsicHeight()
+                };
+                matrix.mapPoints(markerCords);
+                int drawableWidth = markerDrawable.getIntrinsicWidth();
+                int drawableHeight = markerDrawable.getIntrinsicHeight();
+                markerDrawable.setBounds(
+                        (int) (markerCords[0] - drawableWidth / 2),
+                        (int) (markerCords[1] - drawableHeight / 2),
+                        (int) (markerCords[0] + drawableWidth / 2),
+                        (int) (markerCords[1] + drawableHeight / 2)
+                );
+                markerDrawable.draw(canvas);
+            }
+        }
+    }
+
+
     private static final float MIN_ZOOM = 0.4f;
     private static final float MAX_ZOOM = 2f;
 
@@ -191,14 +234,15 @@ public class InteractiveImageView extends AppCompatImageView {
             float scaleFactorChange = detector.getScaleFactor();
             float[] matrixValues = new float[9];
             matrix.getValues(matrixValues);
-            float currentScale = matrixValues[Matrix.MSCALE_X];
-
-            float newScale = currentScale * scaleFactorChange;
-            if (newScale < MIN_ZOOM) {
-                scaleFactorChange = MIN_ZOOM / currentScale;
-            } else if (newScale > MAX_ZOOM) {
-                scaleFactorChange = MAX_ZOOM / currentScale;
-            }
+//            float currentScale = matrixValues[Matrix.MSCALE_X];
+//            float newScale = currentScale * scaleFactorChange;
+//            float minZoom = (float) Math.sqrt(getDrawable().getIntrinsicWidth()) * 8E-3f;
+//            float maxZoom = (float) Math.sqrt(getDrawable().getIntrinsicWidth()) * 4E-2f;
+//            if (newScale < minZoom) {
+//                scaleFactorChange = minZoom / currentScale;
+//            } else if (newScale > maxZoom) {
+//                scaleFactorChange = maxZoom / currentScale;
+//            }
 
             float px = getWidth() / 2.0f;
             float py = getHeight() / 2.0f;
@@ -213,37 +257,38 @@ public class InteractiveImageView extends AppCompatImageView {
         }
     }
 
-    private Map<String, float[]> buildingBounds;
+    private Map<String, float[]> bounds;
 
-    public void setBuildingBounds(Map<String, float[]> buildingBounds) {
-        this.buildingBounds = buildingBounds;
+    public void setBounds(Map<String, float[]> bounds) {
+        this.bounds = bounds;
     }
 
-    private String getBuilding(float x, float y) {
-        if (buildingBounds == null) {
+    private String getBound(float x, float y) {
+        if (bounds == null) {
             return null;
         }
-        for (String building : buildingBounds.keySet()) {
-            if (isInBuilding(x, y, building)) {
-                return building;
+        for (String boundName : bounds.keySet()) {
+            if (isInBound(x, y, boundName)) {
+                Log.i("InteractiveImageView", "bound clicked - " + boundName);
+                return boundName;
             }
         }
         return null;
     }
 
-    private boolean isInBuilding(float x, float y, String building) {
-        float[] bounds = buildingBounds.get(building);
+    private boolean isInBound(float x, float y, String boundName) {
+        float[] bounds = this.bounds.get(boundName);
         return x > bounds[0] && x < bounds[2] && y > bounds[1] && y < bounds[3];
     }
 
-    public interface OnBuildingClickListener {
-        void onBuildingClick(String building);
+    public interface OnBoundClickListener {
+        void onBoundClick(String boundName);
     }
 
-    private OnBuildingClickListener onBuildingClickListener;
+    private OnBoundClickListener onBoundClickListener;
 
-    public void setOnBuildingClickListener(OnBuildingClickListener onBuildingClickListener) {
-        this.onBuildingClickListener = onBuildingClickListener;
+    public void setOnBoundClickListener(OnBoundClickListener onBoundClickListener) {
+        this.onBoundClickListener = onBoundClickListener;
     }
 
 }
