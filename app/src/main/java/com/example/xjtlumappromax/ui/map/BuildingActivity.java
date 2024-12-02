@@ -243,10 +243,10 @@ public class BuildingActivity extends AppCompatActivity {
             Map<String, String> teacherInfo = fetchDataByCondition
                     ("Teachers_Basic_Information", columnsToFetch, "Location", room);
 
-            String name = teacherInfo.get("Nmae");
-            String email = teacherInfo.get("Position");
-            String photo = teacherInfo.get("Email");
-            String scholar = teacherInfo.get("Photo URL");
+            String name = teacherInfo.get("Name");
+            String position = teacherInfo.get("Position");
+            String email = teacherInfo.get("Email");
+            String photo = teacherInfo.get("Photo URL");
             String details = teacherInfo.get("Scholar URL");
 
 
