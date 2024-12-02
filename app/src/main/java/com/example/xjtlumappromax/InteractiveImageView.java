@@ -133,8 +133,8 @@ public class InteractiveImageView extends AppCompatImageView {
             case MotionEvent.ACTION_UP:
                 if (singleFinger && !mapMoved) {
                     float[] imageCoords = getImageCords(event.getX(), event.getY());
-                    Log.i("InteractiveImageView", "image coords - x: " +
-                            imageCoords[0] + ", y: " + imageCoords[1]);
+                    Log.i("InteractiveImageView", "image coords:" +
+                            imageCoords[0] + "f, " + imageCoords[1]+"f,");
                     String boundName = getBound(imageCoords[0], imageCoords[1]);
                     if (boundName != null && onBoundClickListener != null) {
                         onBoundClickListener.onBoundClick(boundName);
