@@ -19,7 +19,7 @@ public class InteractiveImageView extends AppCompatImageView {
     private ScaleGestureDetector scaleDetector;
     private float startX, startY, lastX, lastY;
     private boolean singleFinger, mapMoved;
-    private float markerX, markerY;
+    private float gpsX, gpsY;
 
     public InteractiveImageView(Context context) {
         this(context, null);
@@ -163,8 +163,8 @@ public class InteractiveImageView extends AppCompatImageView {
     }
 
     public void setGpsPosition(float x, float y) {
-        markerX = x;
-        markerY = y;
+        gpsX = x;
+        gpsY = y;
         invalidate();
     }
 
@@ -191,7 +191,7 @@ public class InteractiveImageView extends AppCompatImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (gpsDrawable != null) {
-            float[] gpsCords = {markerX * getDrawable().getIntrinsicWidth(), markerY * getDrawable().getIntrinsicHeight()};
+            float[] gpsCords = {gpsX * getDrawable().getIntrinsicWidth(), gpsY * getDrawable().getIntrinsicHeight()};
             matrix.mapPoints(gpsCords);
             int drawableWidth = gpsDrawable.getIntrinsicWidth();
             int drawableHeight = gpsDrawable.getIntrinsicHeight();
