@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
@@ -42,8 +43,7 @@ public class BuildingActivity extends AppCompatActivity {
     private final Handler mHideHandler = new Handler(Looper.myLooper());
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
+@Override
         public void run() {
             // Delayed removal of status and navigation bar
             if (Build.VERSION.SDK_INT >= 30) {
@@ -219,6 +219,11 @@ public class BuildingActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // do nothing
             }
+        });
+
+        map.setOnBoundClickListener(room -> {
+            Log.i("BuildingActivity", "Room " + room + " clicked");
+            // do nothing
         });
 
     }
