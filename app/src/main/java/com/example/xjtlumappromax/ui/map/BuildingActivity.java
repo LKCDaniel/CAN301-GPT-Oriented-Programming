@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,15 +17,25 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.widget.SeekBar;
 
+import com.example.xjtlumappromax.DatabaseHelper;
 import com.example.xjtlumappromax.InteractiveImageView;
 import com.example.xjtlumappromax.R;
 import com.example.xjtlumappromax.databinding.ActivityBuildingBinding;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 public class BuildingActivity extends AppCompatActivity {
+
+    private static final String TAG = "BuildingActivity";
+    private DatabaseHelper dbHelper;
+    private SQLiteDatabase database;
+
+
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -107,42 +119,19 @@ public class BuildingActivity extends AppCompatActivity {
     };
 
     private ActivityBuildingBinding binding;
-    private Map<String, float[]> SD_5F, SD_4F, SD_3F, SD_2F, SD_1F;
-
-    public BuildingActivity() {
-        SD_5F = new HashMap<>();
-        SD_5F.put("528", new float[]{0.03829316f, 0.006989742f, 0.47643355f, 0.1507825f});
-        SD_5F.put("536", new float[]{0.03829316f, 0.1507825f, 0.47643355f, 0.29461312f});
-        SD_5F.put("540E", new float[]{0.03829316f, 0.29461312f, 0.62395895f, 0.37168148f});
-        SD_5F.put("540W", new float[]{0.03829316f, 0.37168148f, 0.62395895f, 0.4451503f});
-        SD_5F.put("546", new float[]{0.03829316f, 0.4451503f, 0.62395895f, 0.597241f});
-        SD_5F.put("554", new float[]{0.03829316f, 0.597241f, 0.62395895f, 0.7519082f});
-
-        SD_5F.put("523", new float[]{0.7348369f, 0.028538045f, 0.84798205f, 0.080666974f});
-        SD_5F.put("525", new float[]{0.7348369f, 0.080666974f, 0.84798205f, 0.1098245f});
-
-        SD_5F.put("529", new float[]{0.7348369f, 0.14833882f, 0.93850976f, 0.1854425f});
-        SD_5F.put("531", new float[]{0.7348369f, 0.1854425f, 0.93850976f, 0.22166616f});
-        SD_5F.put("533", new float[]{0.7348369f, 0.22166616f, 0.93850976f, 0.25664744f});
-        SD_5F.put("535", new float[]{0.7348369f, 0.25664744f, 0.93850976f, 0.29446292f});
-        SD_5F.put("537", new float[]{0.7348369f, 0.29446292f, 0.93850976f, 0.3313854f});
-        SD_5F.put("539", new float[]{0.7348369f, 0.3313854f, 0.93850976f, 0.3663796f});
-        SD_5F.put("541", new float[]{0.7348369f, 0.3663796f, 0.93850976f, 0.40064904f});
-        SD_5F.put("543", new float[]{0.7348369f, 0.40064904f, 0.93850976f, 0.4363421f});
-        SD_5F.put("545", new float[]{0.7348369f, 0.4363421f, 0.93850976f, 0.47840244f});
-        SD_5F.put("547", new float[]{0.7348369f, 0.47840244f, 0.93850976f, 0.5139143f});
-
-        SD_5F.put("551", new float[]{0.7348369f, 0.53689253f, 0.93850976f, 0.59107935f});
-        SD_5F.put("553", new float[]{0.7348369f, 0.59107935f, 0.93850976f, 0.63039523f});
-        SD_5F.put("555", new float[]{0.7348369f, 0.63039523f, 0.93850976f, 0.6687467f});
-        SD_5F.put("557", new float[]{0.7348369f, 0.6687467f, 0.93850976f, 0.709586f});
-        SD_5F.put("559", new float[]{0.7348369f, 0.709586f, 0.93850976f, 0.74698704f});
-        SD_5F.put("561", new float[]{0.7348369f, 0.74698704f, 0.93850976f, 0.7872533f});
-        SD_5F.put("563", new float[]{0.7348369f, 0.7872533f, 0.93850976f, 0.8263595f});
-        SD_5F.put("565", new float[]{0.7348369f, 0.8263595f, 0.93850976f, 0.86472493f});
-        SD_5F.put("567", new float[]{0.7348369f, 0.86472493f, 0.93850976f, 0.905746f});
-        SD_5F.put("573", new float[]{0.6201988f, 0.9060625f, 0.93850976f, 1.0000576f});
-    }
+    private final Map<String, float[]> SC_5F = Map.of(
+            "540", new float[]{0, 0, 0, 0},
+            "523", new float[]{0.2f, 0.2f, 0.5f, 0.5f},
+            "567", new float[]{0, 0, 0, 0}
+    ), SC_4F = Map.of(
+            "440", new float[]{0, 0, 0, 0},
+            "423", new float[]{0.2f, 0.2f, 0.5f, 0.5f},
+            "467", new float[]{0, 0, 0, 0}
+    ), SA_3F = Map.of(
+            "340", new float[]{0, 0, 0, 0},
+            "323", new float[]{0.2f, 0.2f, 0.5f, 0.5f},
+            "367", new float[]{0, 0, 0, 0}
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,43 +156,69 @@ public class BuildingActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
 
-
         String building = getIntent().getStringExtra("building");
         InteractiveImageView map = binding.floorMap;
         SeekBar floorBar = binding.floorBar;
         floorBar.setProgress(0);
-
+        map.setImageResource(R.drawable.sd5);
+        map.setBounds(SC_5F);
 
         switch (building) {
+            case "SA":
+                floorBar.setMax(4);
+                map.setImageResource(R.drawable.image_test); // floor zero, same for all
+                break;
+            case "SB":
+                floorBar.setMax(4);
+                break;
+            case "SC":
+                floorBar.setMax(4);
+                break;
             case "SD":
                 floorBar.setMax(4);
-                map.setImageResource(R.drawable.sd5);
-                map.setBounds(SD_5F);
                 break;
-            default:
-                map.setImageResource(R.drawable.not_yet_complete);
         }
 
         floorBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 switch (building) {
+                    case "SA":
+                        break;
+                    case "SB":
+                        switch (seekBar.getProgress()) {
+                            case 0:
+                                map.setImageResource(R.drawable.sd5);
+                                map.setBounds(SC_5F);
+                                break;
+                            case 1:
+                                map.setImageResource(R.drawable.image_test);
+                                map.setBounds(SC_4F);
+                                break;
+                            case 2:
+                                map.setImageResource(R.drawable.map_sip);
+                                map.setBounds(SA_3F);
+                                break;
+                        }
+                        break;
+                    case "SC":
+                        // do nothing
+                        break;
                     case "SD":
                         switch (seekBar.getProgress()) {
                             case 0:
-
+                                map.setImageResource(R.drawable.buttom_letgo);
+                                map.setBounds(SC_5F);
+                                break;
                             case 1:
-
+                                map.setImageResource(R.drawable.ic_launcher_background);
+                                map.setBounds(SC_4F);
+                                break;
                             case 2:
-
-                            case 3:
-
-                            case 4:
-                                map.setImageResource(R.drawable.sd5);
-                                map.setBounds(SD_5F);
+                                map.setImageResource(R.drawable.rank);
+                                map.setBounds(SA_3F);
+                                break;
                         }
-                        break;
-                    case "SA":
                         break;
                 }
             }
@@ -222,6 +237,19 @@ public class BuildingActivity extends AppCompatActivity {
         map.setOnBoundClickListener(room -> {
             Log.i("BuildingActivity", "Room " + room + " clicked");
             // do nothing
+
+            List<String> columnsToFetch = Arrays.asList
+                    ("Name", "Position", "Email", "Photo URL", "Scholar URL");
+            Map<String, String> teacherInfo = fetchDataByCondition
+                    ("Teachers_Basic_Information", columnsToFetch, "Location", room);
+
+            String name = teacherInfo.get("Nmae");
+            String email = teacherInfo.get("Position");
+            String photo = teacherInfo.get("Email");
+            String scholar = teacherInfo.get("Photo URL");
+            String details = teacherInfo.get("Scholar URL");
+
+
         });
 
     }
@@ -282,4 +310,52 @@ public class BuildingActivity extends AppCompatActivity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+
+
+
+
+
+    /**
+     * 通用查询方法，返回指定表和列的数据，基于单个条件。
+     *
+     * @param tableName       要查询的表名。
+     * @param columns         要查询的列的列表。
+     * @param conditionColumn 用于条件判断的列名。
+     * @param conditionValue  条件列的值。
+     * @return 包含查询结果的映射，键为列名，值为对应的数据。
+     */
+    public Map<String, String> fetchDataByCondition(String tableName, List<String> columns, String conditionColumn, String conditionValue) {
+        Map<String, String> result = new HashMap<>();
+        Cursor cursor = null;
+        try {
+            // 构建查询所需的列名字符串
+            String columnsList = String.join(", ", columns);
+            // 构建查询语句
+            String query = "SELECT " + columnsList + " FROM " + tableName + " WHERE " + conditionColumn + " = ?";
+            cursor = database.rawQuery(query, new String[]{conditionValue});
+
+            if (cursor != null && cursor.moveToFirst()) {
+                for (String column : columns) {
+                    int index = cursor.getColumnIndex(column);
+                    if (index != -1) {
+                        result.put(column, cursor.getString(index));
+                    } else {
+                        Log.e(TAG, "Column '" + column + "' not found in table '" + tableName + "'");
+                        result.put(column, "Column not found");
+                    }
+                }
+            } else {
+                Log.d(TAG, "No data found for " + conditionColumn + " = " + conditionValue);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error querying database for " + conditionColumn + " = " + conditionValue, e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return result;
+    }
+
+
 }

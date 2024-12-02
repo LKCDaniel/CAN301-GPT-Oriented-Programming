@@ -55,45 +55,6 @@ public class DatabaseQueryHelper {
 
 
 
-    //2024/12/1 创建位置和名字的映射
-    // 查询某个表，并将"location"列和"teacher"列映射成Map
-    public Map<String, String> mapLocationTeacher(String tableName, String locationColumn, String teacherColumn) {
-        Map<String, String> locationTeacherMap = new HashMap<>();
-        Cursor cursor = null;
-
-        try {
-            // 执行查询操作
-            String query = "SELECT " + locationColumn + ", " + teacherColumn + " FROM " + tableName;
-            cursor = db.rawQuery(query, null);
-
-            if (cursor != null && cursor.moveToFirst()) {
-                int locationIndex = cursor.getColumnIndex(locationColumn);
-                int teacherIndex = cursor.getColumnIndex(teacherColumn);
-
-                // 检查列索引是否有效
-                if (locationIndex == -1 || teacherIndex == -1) {
-                    Log.e(TAG, "One or both columns '" + locationColumn + "' or '" + teacherColumn + "' not found in table '" + tableName + "'");
-                } else {
-                    do {
-                        // 获取每一行的 location 和 teacher
-                        String location = cursor.getString(locationIndex);
-                        String teacher = cursor.getString(teacherIndex);
-
-                        // 将其添加到 Map 中
-                        locationTeacherMap.put(location, teacher);
-                    } while (cursor.moveToNext());
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error querying database", e);
-        } finally {
-            if (cursor != null) {
-                cursor.close();  // 关闭游标
-            }
-        }
-
-        return locationTeacherMap;  // 返回映射关系
-    }
 
 
 

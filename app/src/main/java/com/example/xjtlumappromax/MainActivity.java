@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Data为: " + data);
             }
 
-            //创建位置location和tracher名字的映射
-            Map<String, String> locationTeacherMap=queryHelper.mapLocationTeacher("Teachers_Basic_Information","Location","Name");
 
 
 
