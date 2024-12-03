@@ -32,9 +32,9 @@ import java.util.Map;
 
 public class MapFragment extends Fragment {
 
-    public MapFragment instance = this;
+    public static MapFragment instance;
 
-    public MapFragment getInstance() {
+    public static MapFragment getInstance() {
         return instance;
     }
 
@@ -51,6 +51,8 @@ public class MapFragment extends Fragment {
     private Map<String, float[]> sipBuildings, tcBuildings;
 
     public MapFragment() {
+        instance = this;
+
         sipBuildings = new HashMap<>();
         sipBuildings.put("FB", new float[]{0.26984105f, 0.36055145f, 0.4489232f, 0.42319062f});
         sipBuildings.put("CB", new float[]{0.32945752f, 0.47716781f, 0.50128007f, 0.5732224f});
