@@ -202,7 +202,7 @@ public class MapFragment extends Fragment {
                 return "SIP campus, " + s + " building";
             }
         }
-        return "";
+        return "Not in school.";
     }
 
     private void startLocationUpdates() {
