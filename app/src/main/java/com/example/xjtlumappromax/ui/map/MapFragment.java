@@ -32,6 +32,12 @@ import java.util.Map;
 
 public class MapFragment extends Fragment {
 
+    public MapFragment instance = this;
+
+    public MapFragment getInstance() {
+        return instance;
+    }
+
     private FragmentMapBinding binding;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
