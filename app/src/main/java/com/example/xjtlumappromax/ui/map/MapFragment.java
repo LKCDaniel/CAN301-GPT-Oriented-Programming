@@ -1,6 +1,7 @@
 package com.example.xjtlumappromax.ui.map;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -129,6 +130,7 @@ public class MapFragment extends Fragment {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         locationCallback = new LocationCallback() {
+            @SuppressLint("UseCompatLoadingForDrawables")
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult != null && locationResult.getLocations().size() > 0) {
@@ -136,10 +138,12 @@ public class MapFragment extends Fragment {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
                     gpsTextView.setText("Current GPS: " + latitude + ", " + longitude);
-//                    if (!map.isGpsDrawn()) {
-//                        map.setGpsDraw(getResources().getDrawable(R.drawable.ic_location));
-//                    }
-//                    map.setGpsPosition((float) longitude, (float) latitude);
+                    if (!map.isGpsDrawn()) {
+                        map.setGpsDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_gps));
+                    }
+                    float x = transformGpsToImageCoord(longitude, latitude)[0];
+                    float y = transformGpsToImageCoord(longitude, latitude)[1];
+                    map.setGpsPosition(x,y);
                 }
             }
         };
@@ -157,6 +161,42 @@ public class MapFragment extends Fragment {
         }
 
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+    }
+
+    public static double dmsToDecimal(int degrees, int minutes, int seconds) {
+        return degrees + (minutes / 60.0) + (seconds / 3600.0);
+    }
+
+    // Method to calculate transformation parameters and return transformed coordinates
+    public static float[] transformGpsToImageCoord(double lat, double lon) {
+        // Known points (GPS to Image mapping)
+        // Point 1: GPS (31°16'17"N, 120°44'06"E) -> Image coordinates (x: 0.46166694, y: 0.75392914)
+        // Point 2: GPS (31°16'31"N, 120°44'08"E) -> Image coordinates (x: 0.56584126, y: 0.45308766)
+
+        // Convert known GPS points to decimal
+        double lat1 = dmsToDecimal(31, 16, 17);
+        double lon1 = dmsToDecimal(120, 44, 6);
+        double lat2 = dmsToDecimal(31, 16, 31);
+        double lon2 = dmsToDecimal(120, 44, 8);
+
+        // Known image coordinates
+        float x1 = 0.46166694f, y1 = 0.75392914f;
+        float x2 = 0.56584126f, y2 = 0.45308766f;
+
+        // Calculate the slopes (m_latitude, m_longitude)
+        float m_latitude = (float) ((y2 - y1) / (lat2 - lat1));
+        float m_longitude = (float) ((x2 - x1) / (lon2 - lon1));
+
+        // Calculate the intercepts (b_latitude, b_longitude)
+        float b_latitude = y1 - m_latitude * (float) lat1;
+        float b_longitude = x1 - m_longitude * (float) lon1;
+
+        // Transform the input GPS coordinates (lat, lon) to image coordinates (x, y)
+        float transformedY = m_latitude * (float) lat + b_latitude;
+        float transformedX = m_longitude * (float) lon + b_longitude;
+        System.out.println(transformedX);
+        System.out.println(transformedY);
+        return new float[]{transformedX, transformedY};
     }
 
     @Override
