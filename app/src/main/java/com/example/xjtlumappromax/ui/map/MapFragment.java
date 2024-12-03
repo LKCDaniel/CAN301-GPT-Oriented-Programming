@@ -37,6 +37,9 @@ public class MapFragment extends Fragment {
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private TextView gpsTextView;
+    private float[] gpsPosition = {-1, -1};
+    private InteractiveImageView mapView;
+    private SeekBar campusBar;
 
     // left, top, right, bottom
     private Map<String, float[]> sipBuildings, tcBuildings;
@@ -63,104 +66,14 @@ public class MapFragment extends Fragment {
         sipBuildings.put("GM", new float[]{0.8144167f, 0.67424095f, 0.86941934f, 0.7798136f});
 
         tcBuildings = new HashMap<>();
-        tcBuildings.put("A", new float[]{0.6021904f, 0.6692679f,0.7927268f, 0.83774036f});
-        tcBuildings.put("B", new float[]{0.7063885f, 0.52610606f,0.90686935f, 0.6691743f});
-        tcBuildings.put("C", new float[]{0.6359312f, 0.31670865f,0.7664283f, 0.45260242f});
-        tcBuildings.put("D", new float[]{0.44388962f, 0.28983936f,0.57984954f, 0.43484196f});
-        tcBuildings.put("E", new float[]{0.28956306f, 0.34983805f,0.43991548f, 0.5029999f});
-        tcBuildings.put("F", new float[]{0.23547691f, 0.6148731f,0.43000403f, 0.72340524f});
-        tcBuildings.put("G", new float[]{0.37987605f, 0.7253044f,0.52229613f, 0.87656707f});
-        tcBuildings.put("GM", new float[]{0.061872672f, 0.2159123f,0.39036414f, 0.30524206f});
-    }
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        MapViewModel mapViewModel =
-                new ViewModelProvider(this).get(MapViewModel.class);
-
-        binding = FragmentMapBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        InteractiveImageView map = binding.map;
-        SeekBar campusBar = binding.campusBar;
-        map.setImageResource(R.drawable.map_sip);
-        map.setBounds(sipBuildings);
-
-        campusBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                switch (seekBar.getProgress()) {
-                    case 0:
-                        map.setImageResource(R.drawable.map_sip);
-                        map.setBounds(sipBuildings);
-                        break;
-                    case 1:
-                        map.setImageResource(R.drawable.map_tc);
-                        map.setBounds(tcBuildings);
-                        break;
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // do nothing
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // do nothing
-            }
-        });
-
-        map.setMarkerDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_location));
-
-
-        map.setOnBoundClickListener(building -> {
-            Intent intent = new Intent(getContext(), BuildingActivity.class);
-            intent.putExtra("building", building);
-            startActivity(intent);
-        });
-
-        gpsTextView = binding.gpsTextView;
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-
-        locationRequest = LocationRequest.create();
-        locationRequest.setInterval(1000);  // 每秒更新一次位置
-        locationRequest.setFastestInterval(500);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        locationCallback = new LocationCallback() {
-            @SuppressLint("UseCompatLoadingForDrawables")
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult != null && locationResult.getLocations().size() > 0) {
-                    Location location = locationResult.getLastLocation();
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    gpsTextView.setText("Current GPS: " + latitude + ", " + longitude);
-                    if (!map.isGpsDrawn()) {
-                        map.setGpsDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_gps));
-                    }
-                    float x = transformGpsToImageCoord(longitude, latitude)[0];
-                    float y = transformGpsToImageCoord(longitude, latitude)[1];
-                    map.setGpsPosition(x,y);
-                }
-            }
-        };
-        startLocationUpdates();
-        return root;
-    }
-
-    private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //获取位置权限
-            ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-            return;
-        }
-
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        tcBuildings.put("A", new float[]{0.6021904f, 0.6692679f, 0.7927268f, 0.83774036f});
+        tcBuildings.put("B", new float[]{0.7063885f, 0.52610606f, 0.90686935f, 0.6691743f});
+        tcBuildings.put("C", new float[]{0.6359312f, 0.31670865f, 0.7664283f, 0.45260242f});
+        tcBuildings.put("D", new float[]{0.44388962f, 0.28983936f, 0.57984954f, 0.43484196f});
+        tcBuildings.put("E", new float[]{0.28956306f, 0.34983805f, 0.43991548f, 0.5029999f});
+        tcBuildings.put("F", new float[]{0.23547691f, 0.6148731f, 0.43000403f, 0.72340524f});
+        tcBuildings.put("G", new float[]{0.37987605f, 0.7253044f, 0.52229613f, 0.87656707f});
+        tcBuildings.put("GM", new float[]{0.061872672f, 0.2159123f, 0.39036414f, 0.30524206f});
     }
 
     public static double dmsToDecimal(int degrees, int minutes, int seconds) {
@@ -197,6 +110,111 @@ public class MapFragment extends Fragment {
         System.out.println(transformedX);
         System.out.println(transformedY);
         return new float[]{transformedX, transformedY};
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        MapViewModel mapViewModel =
+                new ViewModelProvider(this).get(MapViewModel.class);
+
+        binding = FragmentMapBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+
+        mapView = binding.map;
+        campusBar = binding.campusBar;
+        mapView.setImageResource(R.drawable.map_sip);
+        mapView.setBounds(sipBuildings);
+
+        campusBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                switch (seekBar.getProgress()) {
+                    case 0:
+                        mapView.setImageResource(R.drawable.map_sip);
+                        mapView.setBounds(sipBuildings);
+                        break;
+                    case 1:
+                        mapView.setImageResource(R.drawable.map_tc);
+                        mapView.setBounds(tcBuildings);
+                        break;
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // do nothing
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // do nothing
+            }
+        });
+
+        mapView.setMarkerDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_location));
+
+
+        mapView.setOnBoundClickListener(building -> {
+            Intent intent = new Intent(getContext(), BuildingActivity.class);
+            intent.putExtra("building", building);
+            startActivity(intent);
+        });
+
+        gpsTextView = binding.gpsTextView;
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(1000);  // 每秒更新一次位置
+        locationRequest.setFastestInterval(500);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        locationCallback = new LocationCallback() {
+            @SuppressLint("UseCompatLoadingForDrawables")
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult != null && locationResult.getLocations().size() > 0) {
+                    Location location = locationResult.getLastLocation();
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    gpsTextView.setText("Current GPS: " + latitude + ", " + longitude);
+                    gpsPosition = transformGpsToImageCoord(longitude, latitude);
+                    if (gpsPosition[0] >= 0 && gpsPosition[0] <= 1 && gpsPosition[0] >= 0 && gpsPosition[0] <= 1) {
+                        if (!mapView.isGpsDrawn()) {
+                            mapView.setGpsDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_gps));
+                        }
+                    } else {
+                        mapView.cancelGpsDraw();
+                    }
+                    mapView.setGpsPosition(gpsPosition[0], gpsPosition[1]);
+                }
+            }
+        };
+        startLocationUpdates();
+        return root;
+    }
+
+    public String getLocationName() {
+        String s = mapView.getBound(gpsPosition[0], gpsPosition[1]);
+        if (gpsPosition[0] >= 0 && gpsPosition[0] <= 1 && gpsPosition[0] >= 0 && gpsPosition[0] <= 1) {
+            if (s.isEmpty()) {
+                return "SIP campus";
+            } else {
+                return "SIP campus, " + s + " building";
+            }
+        }
+        return "";
+    }
+
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //获取位置权限
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            return;
+        }
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 
     @Override
