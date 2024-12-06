@@ -42,7 +42,7 @@
             android:id="@+id/floorMap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/sd5"
+            android:src="@drawable/sd4"
             tools:srcCompat="@tools:sample/avatars" />
 
         <SeekBar

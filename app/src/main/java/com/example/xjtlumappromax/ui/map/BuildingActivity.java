@@ -186,7 +186,7 @@ public class BuildingActivity extends AppCompatActivity {
         floorBar.setProgress(0);
 
 
-        switch (building) {
+/*        switch (building) {
             case "SD":
                 floorBar.setMax(4);
                 map.setImageResource(R.drawable.sd5);
@@ -194,7 +194,7 @@ public class BuildingActivity extends AppCompatActivity {
                 break;
             default:
                 map.setImageResource(R.drawable.not_yet_complete);
-        }
+        }*/
 
         floorBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -203,18 +203,27 @@ public class BuildingActivity extends AppCompatActivity {
                     case "SD":
                         switch (seekBar.getProgress()) {
                             case 0:
-
+                                map.setImageResource(R.drawable.sd4);
+                                map.setBounds(SD_1F);
+                                break;
                             case 1:
-
+                                map.setImageResource(R.drawable.sd4);
+                                map.setBounds(SD_2F);
+                                break;
                             case 2:
-
+                                map.setImageResource(R.drawable.sd4);
+                                map.setBounds(SD_3F);
+                                break;
                             case 3:
-
+                                map.setImageResource(R.drawable.sd4);
+                                map.setBounds(SD_4F);
+                                break;
                             case 4:
                                 map.setImageResource(R.drawable.sd5);
                                 map.setBounds(SD_5F);
+                                break;
                         }
-                        break;
+
                     case "SA":
                         break;
                 }
