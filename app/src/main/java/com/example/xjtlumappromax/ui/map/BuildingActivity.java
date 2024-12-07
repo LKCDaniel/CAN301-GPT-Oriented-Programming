@@ -154,6 +154,40 @@ public class BuildingActivity extends AppCompatActivity {
         SD_5F.put("565", new float[]{0.7348369f, 0.8263595f, 0.93850976f, 0.86472493f});
         SD_5F.put("567", new float[]{0.7348369f, 0.86472493f, 0.93850976f, 0.905746f});
         SD_5F.put("573", new float[]{0.6201988f, 0.9060625f, 0.93850976f, 1.0000576f});
+
+
+        SD_4F = new HashMap<>();
+        SD_4F.put("428", new float[]{0.035877228f, 0.0035337165f, 0.63024354f, 0.1476511f});
+        SD_4F.put("436", new float[]{0.035877228f, 0.1476511f, 0.49121776f, 0.2917685f});
+        SD_4F.put("440", new float[]{0.035877228f, 0.2917685f, 0.63024354f, 0.4401071f});
+        SD_4F.put("446E", new float[]{0.035877228f, 0.4401071f, 0.63024354f, 0.5170544f});
+        SD_4F.put("446W", new float[]{0.035877228f, 0.5170544f, 0.63024354f, 0.59494513f});
+        SD_4F.put("454", new float[]{0.035877228f, 0.59494513f, 0.63024354f, 0.749964f});
+
+        SD_4F.put("421", new float[]{0.75058746f, 0.004686064f, 0.8654696f, 0.04596208f});
+        SD_4F.put("423", new float[]{0.75058746f, 0.04596208f, 0.8654696f, 0.077031545f});
+        SD_4F.put("425", new float[]{0.75058746f, 0.077031545f, 0.8654696f, 0.11138014f});
+
+        SD_4F.put("429", new float[]{0.75058746f, 0.14858863f, 0.96365225f, 0.1855875f});
+        SD_4F.put("431", new float[]{0.75058746f, 0.1855875f, 0.96365225f, 0.22360453f});
+        SD_4F.put("433", new float[]{0.75058746f, 0.22360453f, 0.96365225f, 0.26000446f});
+        SD_4F.put("435", new float[]{0.75058746f, 0.26000446f, 0.96365225f, 0.2980215f});
+        SD_4F.put("437", new float[]{0.75058746f, 0.2980215f, 0.96365225f, 0.3342118f});
+        SD_4F.put("439", new float[]{0.75058746f, 0.3342118f, 0.96365225f, 0.36956358f});
+        SD_4F.put("441", new float[]{0.75058746f, 0.36956358f, 0.96365225f, 0.40043843f});
+        SD_4F.put("443", new float[]{0.75058746f, 0.40043843f, 0.96365225f, 0.4799613f});
+        SD_4F.put("447", new float[]{0.75058746f, 0.4799613f, 0.96365225f, 0.5145045f});
+
+        SD_4F.put("451", new float[]{0.75058746f, 0.53576654f, 0.96365225f, 0.5915867f});
+        SD_4F.put("453", new float[]{0.75058746f, 0.5915867f, 0.96365225f, 0.62960374f});
+        SD_4F.put("455", new float[]{0.75058746f, 0.62960374f, 0.96365225f, 0.6676208f});
+        SD_4F.put("457", new float[]{0.75058746f, 0.6676208f, 0.96365225f, 0.7091266f});
+        SD_4F.put("459", new float[]{0.75058746f, 0.7091266f, 0.96365225f, 0.7461255f});
+        SD_4F.put("461", new float[]{0.75058746f, 0.7461255f, 0.96365225f, 0.7851757f});
+        SD_4F.put("463", new float[]{0.75058746f, 0.7851757f, 0.96365225f, 0.825858f});
+        SD_4F.put("465", new float[]{0.75058746f, 0.825858f, 0.96365225f, 0.86550707f});
+        SD_4F.put("467", new float[]{0.75058746f, 0.86550707f, 0.96365225f, 0.90618926f});
+        SD_4F.put("473", new float[]{0.6316989f, 0.90618926f, 0.96365225f, 1.000213f});
     }
 
     @Override
@@ -184,6 +218,7 @@ public class BuildingActivity extends AppCompatActivity {
         InteractiveImageView map = binding.floorMap;
         SeekBar floorBar = binding.floorBar;
         floorBar.setProgress(0);
+        map.setImageResource(R.drawable.not_yet_complete);
 
 
 /*        switch (building) {
@@ -203,15 +238,15 @@ public class BuildingActivity extends AppCompatActivity {
                     case "SD":
                         switch (seekBar.getProgress()) {
                             case 0:
-                                map.setImageResource(R.drawable.sd4);
+                                map.setImageResource(R.drawable.not_yet_complete);
                                 map.setBounds(SD_1F);
                                 break;
                             case 1:
-                                map.setImageResource(R.drawable.sd4);
+                                map.setImageResource(R.drawable.not_yet_complete);
                                 map.setBounds(SD_2F);
                                 break;
                             case 2:
-                                map.setImageResource(R.drawable.sd4);
+                                map.setImageResource(R.drawable.not_yet_complete);
                                 map.setBounds(SD_3F);
                                 break;
                             case 3:
@@ -241,23 +276,23 @@ public class BuildingActivity extends AppCompatActivity {
             }
         });
 
-        map.setOnBoundClickListener(room -> {
-            Log.i("BuildingActivity", "Room " + room + " clicked");
-            // do nothing
-
-            List<String> columnsToFetch = Arrays.asList
-                    ("Name", "Position", "Email", "Photo URL", "Scholar URL");
-            Map<String, String> teacherInfo = fetchDataByCondition
-                    ("Teachers_Basic_Information", columnsToFetch, "Location", room);
-
-            String name = teacherInfo.get("Name");
-            String position = teacherInfo.get("Position");
-            String email = teacherInfo.get("Email");
-            String photo = teacherInfo.get("Photo URL");
-            String details = teacherInfo.get("Scholar URL");
-
-
-        });
+//        map.setOnBoundClickListener(room -> {
+//            Log.i("BuildingActivity", "Room " + room + " clicked");
+//            // do nothing
+//
+//            List<String> columnsToFetch = Arrays.asList
+//                    ("Name", "Position", "Email", "Photo URL", "Scholar URL");
+//            Map<String, String> teacherInfo = fetchDataByCondition
+//                    ("Teachers_Basic_Information", columnsToFetch, "Location", room);
+//
+//            String name = teacherInfo.get("Name");
+//            String position = teacherInfo.get("Position");
+//            String email = teacherInfo.get("Email");
+//            String photo = teacherInfo.get("Photo URL");
+//            String details = teacherInfo.get("Scholar URL");
+//
+//
+//        });
 
     }
 
@@ -317,9 +352,6 @@ public class BuildingActivity extends AppCompatActivity {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
-
-
-
 
 
     /**

@@ -18,8 +18,6 @@ public class FriendsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        FriendsViewModel friendsViewModel =
-                new ViewModelProvider(this).get(FriendsViewModel.class);
 
         binding = FragmentFriendsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
