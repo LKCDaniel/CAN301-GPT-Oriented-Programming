@@ -2,22 +2,33 @@ package com.example.xjtlumappromax.ui.map;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.location.Location;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.xjtlumappromax.DatabaseHelper;
 import com.example.xjtlumappromax.InteractiveImageView;
 import com.example.xjtlumappromax.R;
 import com.example.xjtlumappromax.databinding.FragmentMapBinding;
@@ -27,16 +38,29 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationRequest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapFragment extends Fragment {
+
+    //按钮
+    Spinner teacherSpinner; // 声明为全局变量
+    SearchView searchView;
+    Button searchButton;
+
 
     public static MapFragment instance;
 
     public static MapFragment getInstance() {
         return instance;
     }
+
+
+    //原有的数据库
+    private SQLiteDatabase database;
+
 
     private FragmentMapBinding binding;
     private FusedLocationProviderClient fusedLocationClient;
@@ -120,8 +144,59 @@ public class MapFragment extends Fragment {
         return new float[]{transformedX, transformedY};
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // 在 onCreate 中获取 Context 并初始化数据库
+        Context context = getContext();
+        if (context == null) {
+            throw new IllegalStateException("Context is null, cannot initialize DatabaseHelper.");
+        }
+
+        if (context != null) {
+            DatabaseHelper dbHelper = new DatabaseHelper(context);
+            database = dbHelper.getReadableDatabase(); // 获取数据库
+            Log.i("database数据库","数据库成功初始化");
+        }
+
+
+        List<String> testname=fuzzySearchName("Li");
+        Log.i("数据库测试结果", testname.toString());
+        //如果logcat中出现了[Dawei Liu, Lijie Yao, Lingyun Yu, Nanlin Jin,这样就成功了
+    }
+
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+
+        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+        // 搜索按钮
+        searchButton = rootView.findViewById(R.id.searchButton);
+        searchView = rootView.findViewById(R.id.searchView);
+        teacherSpinner = rootView.findViewById(R.id.teacherSpinner);
+        Log.i("Button状态", searchButton == null ? "searchButton 未找到" : "searchButton 已初始化");
+
+// 设置搜索按钮点击事件
+// 设置搜索按钮点击事件 (使用 Lambda 表达式)
+        searchButton.setOnClickListener(v -> {
+            String query = searchView.getQuery().toString().trim(); // 获取并去除首尾空格
+            Log.i("searchButton语句为", query.toString());
+
+            if (!query.isEmpty()) {
+                List<String> results = fuzzySearchName(query); // 调用模糊查询方法
+                Log.i("searchButton结果", results.toString());
+                updateTeacherSpinner(results); // 更新 Spinner 的数据
+            } else {
+                Toast.makeText(getContext(), "请输入搜索内容", Toast.LENGTH_SHORT).show(); // 提示用户输入
+            }
+        });
+
+
+
 
         binding = FragmentMapBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -199,6 +274,24 @@ public class MapFragment extends Fragment {
         return root;
     }
 
+
+    // 更新 Spinner 的方法
+    private void updateTeacherSpinner(List<String> results) {
+        // 创建 ArrayAdapter，并指定显示格式
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getContext(),  // 上下文
+                android.R.layout.simple_spinner_item,  // 单个条目的布局
+                results);  // 数据源
+
+        // 设置下拉框的布局样式
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // 将适配器设置给 Spinner
+        teacherSpinner.setAdapter(adapter);
+    }
+
+
+
     public String getLocationName() {
         String s = mapView.getBound(gpsPosition[0], gpsPosition[1]);
         if (gpsPosition[0] >= 0 && gpsPosition[0] <= 1 && gpsPosition[0] >= 0 && gpsPosition[0] <= 1) {
@@ -223,10 +316,46 @@ public class MapFragment extends Fragment {
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
         fusedLocationClient.removeLocationUpdates(locationCallback);
+
+
+//防止数据内存泄露哈
+        if (database != null) {
+            database.close();
+        }
+    }
+
+    // 在这里做数据库相关的操作，比如模糊查询
+    private List<String> fuzzySearchName(String query) {
+        List<String> teacherNames = new ArrayList<>();
+        Cursor cursor = null;
+
+        try {
+            String sqlQuery = "SELECT Name FROM Teachers_Basic_Information WHERE Name LIKE ?";
+            cursor = database.rawQuery(sqlQuery, new String[]{"%" + query + "%"});
+
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex("Name");
+                if (columnIndex != -1) { // 检查列索引是否存在
+                    do {
+                        String teacherName = cursor.getString(columnIndex);
+                        teacherNames.add(teacherName);
+                    } while (cursor.moveToNext());
+                }
+            }
+        } catch (Exception e) {
+            Log.e("MapFragment", "Error during fuzzy search", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return teacherNames;
     }
 }

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -22,6 +23,7 @@ import com.example.xjtlumappromax.InteractiveImageView;
 import com.example.xjtlumappromax.R;
 import com.example.xjtlumappromax.databinding.ActivityBuildingBinding;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,8 +35,8 @@ public class BuildingActivity extends AppCompatActivity {
 
     private static final String TAG = "BuildingActivity";
     private DatabaseHelper dbHelper;
-    private SQLiteDatabase database;
 
+    private SQLiteDatabase database;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -192,6 +194,26 @@ public class BuildingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // 初始化 DatabaseHelper 和 SQLiteDatabase
+        dbHelper = new DatabaseHelper(this);
+        try {
+            dbHelper.createDatabase(); // 复制数据库文件
+            database = dbHelper.openDatabase(); // 打开数据库
+            Log.i(TAG, "111Database initialized successfully.");
+        } catch (IOException e) {
+            Log.e(TAG, "111Error initializing database", e);
+            // 这里可以选择终止应用或显示错误信息给用户
+            return;
+        }
+
+        if (database == null) {
+            Log.e(TAG, "111Database is null after initialization.");
+            return;
+        }
+
+
+
         super.onCreate(savedInstanceState);
 
         binding = ActivityBuildingBinding.inflate(getLayoutInflater());
@@ -276,23 +298,43 @@ public class BuildingActivity extends AppCompatActivity {
             }
         });
 
-//        map.setOnBoundClickListener(room -> {
-//            Log.i("BuildingActivity", "Room " + room + " clicked");
-//            // do nothing
-//
-//            List<String> columnsToFetch = Arrays.asList
-//                    ("Name", "Position", "Email", "Photo URL", "Scholar URL");
-//            Map<String, String> teacherInfo = fetchDataByCondition
-//                    ("Teachers_Basic_Information", columnsToFetch, "Location", room);
-//
-//            String name = teacherInfo.get("Name");
-//            String position = teacherInfo.get("Position");
-//            String email = teacherInfo.get("Email");
-//            String photo = teacherInfo.get("Photo URL");
-//            String details = teacherInfo.get("Scholar URL");
-//
-//
-//        });
+        // 设置房间点击监听器
+        map.setOnBoundClickListener(room -> {
+            Log.i(TAG, "Room " + room + " clicked");
+
+            List<String> columnsToFetch = Arrays.asList("Name", "Position", "Email", "Photo URL", "Scholar URL");
+            Map<String, String> teacherInfo = fetchDataByCondition
+                    ("Teachers_Basic_Information",
+                    columnsToFetch,
+                    "Location",
+                    "SD"+room);
+
+            String name = teacherInfo.get("Name");
+            String position = teacherInfo.get("Position");
+            String email = teacherInfo.get("Email");
+            String photo = teacherInfo.get("Photo URL");
+            String details = teacherInfo.get("Scholar URL");
+
+            // 这里可以添加逻辑，显示教师信息
+            Log.i(TAG, "Name: " + name);
+            Log.i(TAG, "Position: " + position);
+            Log.i(TAG, "Email: " + email);
+            Log.i(TAG, "Photo URL: " + photo);
+            Log.i(TAG, "Scholar URL: " + details);
+
+
+
+            // 启动 TeacherBasicInfoActivity 并传递数据
+            Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
+            intent.putExtra("name", name);
+            intent.putExtra("position", position);
+            intent.putExtra("email", email);
+            intent.putExtra("photo", photo);
+            intent.putExtra("details", details);
+            startActivity(intent);
+        });
+
+
 
     }
 
@@ -367,10 +409,21 @@ public class BuildingActivity extends AppCompatActivity {
         Map<String, String> result = new HashMap<>();
         Cursor cursor = null;
         try {
-            // 构建查询所需的列名字符串
-            String columnsList = String.join(", ", columns);
+            // 通过在列名周围添加双引号来处理列名中的空格
+            List<String> escapedColumns = new ArrayList<>();
+            for (String col : columns) {
+                escapedColumns.add("\"" + col + "\"");
+            }
+            String columnsList = String.join(", ", escapedColumns);
+
+            // 处理条件列名
+            String escapedConditionColumn = "\"" + conditionColumn + "\"";
+
+            // 处理表名
+            String escapedTableName = "\"" + tableName + "\"";
+
             // 构建查询语句
-            String query = "SELECT " + columnsList + " FROM " + tableName + " WHERE " + conditionColumn + " = ?";
+            String query = "SELECT " + columnsList + " FROM " + escapedTableName + " WHERE " + escapedConditionColumn + " = ?";
             cursor = database.rawQuery(query, new String[]{conditionValue});
 
             if (cursor != null && cursor.moveToFirst()) {
@@ -395,6 +448,7 @@ public class BuildingActivity extends AppCompatActivity {
         }
         return result;
     }
+
 
 
 }

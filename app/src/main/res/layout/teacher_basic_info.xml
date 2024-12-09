@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/creamy_white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/creamy_white">
 
     <ImageView
         android:id="@+id/back"
@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+    <!--老师照片-->
     <ImageView
         android:id="@+id/teacher_photo"
         android:layout_width="150dp"
@@ -31,29 +32,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.129" />
 
-
-    <TextView
-        android:id="@+id/person_price"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="250dp"
-        android:layout_marginBottom="120dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/name_text"
-        android:backgroundTint="@color/creamy_white"
-        android:elevation="8dp"
-        android:fontFamily="@font/carterone"
-        android:gravity="center"
-        android:text="#4"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.527" />
 
     <Button
         android:id="@+id/view_more"
@@ -72,6 +50,65 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.938" />
+
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_marginStart="74dp"
+        android:layout_marginTop="254dp"
+        android:layout_marginEnd="74dp"
+        android:layout_marginBottom="428dp"
+        android:fontFamily="@font/carterone"
+        android:gravity="center"
+
+        android:text="Name"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!-- 教师职位 -->
+
+    <TextView
+        android:id="@+id/position_text"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_marginStart="121dp"
+        android:layout_marginTop="376dp"
+        android:layout_marginEnd="122dp"
+        android:layout_marginBottom="322dp"
+        android:fontFamily="@font/carterone"
+        android:gravity="center"
+        android:text="Position"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="183dp"
+        android:layout_marginTop="492dp"
+        android:layout_marginEnd="184dp"
+        android:layout_marginBottom="214dp"
+        android:fontFamily="@font/carterone"
+        android:gravity="center"
+        android:text="Email"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

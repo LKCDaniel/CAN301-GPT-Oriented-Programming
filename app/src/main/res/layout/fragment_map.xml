@@ -42,6 +42,17 @@
         tools:layout_editor_absoluteX="130dp"
         tools:layout_editor_absoluteY="0dp" />
 
+    <!-- 添加 Spinner 控件 -->
+    <Spinner
+        android:id="@+id/teacherSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/searchButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="15dp" />
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
