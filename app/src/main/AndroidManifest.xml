@@ -39,11 +39,11 @@
             android:name=".ui.map.BuildingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
-            android:label="@string/title_activity_sip_bs"
+            android:label="@string/title_building"
             android:theme="@style/Theme.XJTLUMapProMax.Fullscreen" />
         <activity
             android:name="MainActivity"
-            android:exported="true">
+            android:exported="true">>
 
         </activity>
 

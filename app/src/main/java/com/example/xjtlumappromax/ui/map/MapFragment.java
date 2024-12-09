@@ -232,7 +232,7 @@ public class MapFragment extends Fragment {
             }
         });
 
-        mapView.setMarkerDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_location));
+        mapView.setMarkerDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_gps));
 
 
         mapView.setOnBoundClickListener(building -> {
