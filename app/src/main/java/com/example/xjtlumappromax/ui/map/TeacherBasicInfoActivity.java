@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,12 @@ public class TeacherBasicInfoActivity extends AppCompatActivity {
         // 初始化 ViewBinding
         binding = TeacherBasicInfoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // 设置 ActionBar 中的返回按钮
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
+            getSupportActionBar().setHomeButtonEnabled(true);  // 启用返回按钮的点击事件
+        }
 
         // 获取 Intent 中传递的数据
         Intent intent = getIntent();
@@ -62,5 +69,15 @@ public class TeacherBasicInfoActivity extends AppCompatActivity {
 
         // 设置返回按钮点击事件
         binding.back.setOnClickListener(v -> finish());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // 触发返回操作
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
