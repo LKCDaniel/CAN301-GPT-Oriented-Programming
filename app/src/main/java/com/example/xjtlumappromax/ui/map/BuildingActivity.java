@@ -246,8 +246,12 @@ public class BuildingActivity extends AppCompatActivity {
         InteractiveImageView map = binding.floorMap;
         SeekBar floorBar = binding.floorBar;
         floorBar.setProgress(0);
-        map.setImageResource(R.drawable.not_yet_complete);
-
+        switch (building){
+            case "SD":
+                break;
+            default:
+                map.setImageResource(R.drawable.not_yet_complete);
+        }
 
 /*        switch (building) {
             case "SD":
@@ -266,11 +270,11 @@ public class BuildingActivity extends AppCompatActivity {
                     case "SD":
                         switch (seekBar.getProgress()) {
                             case 0:
-                                map.setImageResource(R.drawable.not_yet_complete);
+                                map.setImageResource(R.drawable.sd1);
                                 map.setBounds(SD_1F);
                                 break;
                             case 1:
-                                map.setImageResource(R.drawable.not_yet_complete);
+                                map.setImageResource(R.drawable.sd2);
                                 map.setBounds(SD_2F);
                                 break;
                             case 2:
