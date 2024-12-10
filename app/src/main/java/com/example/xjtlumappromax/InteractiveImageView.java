@@ -263,7 +263,7 @@ public class InteractiveImageView extends AppCompatImageView {
         this.bounds = bounds;
     }
 
-    private String getBound(float x, float y) {
+    public String getBound(float x, float y) {
         if (bounds == null) {
             return null;
         }

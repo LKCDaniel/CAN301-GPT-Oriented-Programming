@@ -44,7 +44,11 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.activity)
+<<<<<<< HEAD
     implementation(libs.room.common)
+=======
+    implementation(libs.glide)
+>>>>>>> 0a16d427a82695f22c458d5a3aa309ba69ffe616
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

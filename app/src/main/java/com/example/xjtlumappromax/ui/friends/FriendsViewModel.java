@@ -20,7 +20,7 @@ public class FriendsViewModel extends ViewModel {
         private int score;
         private int rank;
 
-        public Friend(String name, int score, int rank) {
+        public Friend(String name, int score, int rank, int logoResId) {
             this.name = name;
             this.score = score;
             this.rank = rank;

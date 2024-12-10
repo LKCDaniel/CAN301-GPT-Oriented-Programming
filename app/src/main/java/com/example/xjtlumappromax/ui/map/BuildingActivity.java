@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
@@ -22,6 +24,7 @@ import com.example.xjtlumappromax.InteractiveImageView;
 import com.example.xjtlumappromax.R;
 import com.example.xjtlumappromax.databinding.ActivityBuildingBinding;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,8 +36,8 @@ public class BuildingActivity extends AppCompatActivity {
 
     private static final String TAG = "BuildingActivity";
     private DatabaseHelper dbHelper;
-    private SQLiteDatabase database;
 
+    private SQLiteDatabase database;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -154,14 +157,73 @@ public class BuildingActivity extends AppCompatActivity {
         SD_5F.put("565", new float[]{0.7348369f, 0.8263595f, 0.93850976f, 0.86472493f});
         SD_5F.put("567", new float[]{0.7348369f, 0.86472493f, 0.93850976f, 0.905746f});
         SD_5F.put("573", new float[]{0.6201988f, 0.9060625f, 0.93850976f, 1.0000576f});
+
+
+        SD_4F = new HashMap<>();
+        SD_4F.put("428", new float[]{0.035877228f, 0.0035337165f, 0.63024354f, 0.1476511f});
+        SD_4F.put("436", new float[]{0.035877228f, 0.1476511f, 0.49121776f, 0.2917685f});
+        SD_4F.put("440", new float[]{0.035877228f, 0.2917685f, 0.63024354f, 0.4401071f});
+        SD_4F.put("446E", new float[]{0.035877228f, 0.4401071f, 0.63024354f, 0.5170544f});
+        SD_4F.put("446W", new float[]{0.035877228f, 0.5170544f, 0.63024354f, 0.59494513f});
+        SD_4F.put("454", new float[]{0.035877228f, 0.59494513f, 0.63024354f, 0.749964f});
+
+        SD_4F.put("421", new float[]{0.75058746f, 0.004686064f, 0.8654696f, 0.04596208f});
+        SD_4F.put("423", new float[]{0.75058746f, 0.04596208f, 0.8654696f, 0.077031545f});
+        SD_4F.put("425", new float[]{0.75058746f, 0.077031545f, 0.8654696f, 0.11138014f});
+
+        SD_4F.put("429", new float[]{0.75058746f, 0.14858863f, 0.96365225f, 0.1855875f});
+        SD_4F.put("431", new float[]{0.75058746f, 0.1855875f, 0.96365225f, 0.22360453f});
+        SD_4F.put("433", new float[]{0.75058746f, 0.22360453f, 0.96365225f, 0.26000446f});
+        SD_4F.put("435", new float[]{0.75058746f, 0.26000446f, 0.96365225f, 0.2980215f});
+        SD_4F.put("437", new float[]{0.75058746f, 0.2980215f, 0.96365225f, 0.3342118f});
+        SD_4F.put("439", new float[]{0.75058746f, 0.3342118f, 0.96365225f, 0.36956358f});
+        SD_4F.put("441", new float[]{0.75058746f, 0.36956358f, 0.96365225f, 0.40043843f});
+        SD_4F.put("443", new float[]{0.75058746f, 0.40043843f, 0.96365225f, 0.4799613f});
+        SD_4F.put("447", new float[]{0.75058746f, 0.4799613f, 0.96365225f, 0.5145045f});
+
+        SD_4F.put("451", new float[]{0.75058746f, 0.53576654f, 0.96365225f, 0.5915867f});
+        SD_4F.put("453", new float[]{0.75058746f, 0.5915867f, 0.96365225f, 0.62960374f});
+        SD_4F.put("455", new float[]{0.75058746f, 0.62960374f, 0.96365225f, 0.6676208f});
+        SD_4F.put("457", new float[]{0.75058746f, 0.6676208f, 0.96365225f, 0.7091266f});
+        SD_4F.put("459", new float[]{0.75058746f, 0.7091266f, 0.96365225f, 0.7461255f});
+        SD_4F.put("461", new float[]{0.75058746f, 0.7461255f, 0.96365225f, 0.7851757f});
+        SD_4F.put("463", new float[]{0.75058746f, 0.7851757f, 0.96365225f, 0.825858f});
+        SD_4F.put("465", new float[]{0.75058746f, 0.825858f, 0.96365225f, 0.86550707f});
+        SD_4F.put("467", new float[]{0.75058746f, 0.86550707f, 0.96365225f, 0.90618926f});
+        SD_4F.put("473", new float[]{0.6316989f, 0.90618926f, 0.96365225f, 1.000213f});
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // 初始化 DatabaseHelper 和 SQLiteDatabase
+        dbHelper = new DatabaseHelper(this);
+        try {
+            dbHelper.createDatabase(); // 复制数据库文件
+            database = dbHelper.openDatabase(); // 打开数据库
+            Log.i(TAG, "111Database initialized successfully.");
+        } catch (IOException e) {
+            Log.e(TAG, "111Error initializing database", e);
+            // 这里可以选择终止应用或显示错误信息给用户
+            return;
+        }
+
+        if (database == null) {
+            Log.e(TAG, "111Database is null after initialization.");
+            return;
+        }
+
+
+
         super.onCreate(savedInstanceState);
 
         binding = ActivityBuildingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
+            getSupportActionBar().setHomeButtonEnabled(true);  // 启用返回按钮的点击事件
+        }
 
         mVisible = true;
         mControlsView = binding.fullscreenContentControls;
@@ -184,9 +246,10 @@ public class BuildingActivity extends AppCompatActivity {
         InteractiveImageView map = binding.floorMap;
         SeekBar floorBar = binding.floorBar;
         floorBar.setProgress(0);
+        map.setImageResource(R.drawable.not_yet_complete);
 
 
-        switch (building) {
+/*        switch (building) {
             case "SD":
                 floorBar.setMax(4);
                 map.setImageResource(R.drawable.sd5);
@@ -194,7 +257,7 @@ public class BuildingActivity extends AppCompatActivity {
                 break;
             default:
                 map.setImageResource(R.drawable.not_yet_complete);
-        }
+        }*/
 
         floorBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -203,18 +266,27 @@ public class BuildingActivity extends AppCompatActivity {
                     case "SD":
                         switch (seekBar.getProgress()) {
                             case 0:
-
+                                map.setImageResource(R.drawable.not_yet_complete);
+                                map.setBounds(SD_1F);
+                                break;
                             case 1:
-
+                                map.setImageResource(R.drawable.not_yet_complete);
+                                map.setBounds(SD_2F);
+                                break;
                             case 2:
-
+                                map.setImageResource(R.drawable.not_yet_complete);
+                                map.setBounds(SD_3F);
+                                break;
                             case 3:
-
+                                map.setImageResource(R.drawable.sd4);
+                                map.setBounds(SD_4F);
+                                break;
                             case 4:
                                 map.setImageResource(R.drawable.sd5);
                                 map.setBounds(SD_5F);
+                                break;
                         }
-                        break;
+
                     case "SA":
                         break;
                 }
@@ -232,14 +304,16 @@ public class BuildingActivity extends AppCompatActivity {
             }
         });
 
+        // 设置房间点击监听器
         map.setOnBoundClickListener(room -> {
-            Log.i("BuildingActivity", "Room " + room + " clicked");
-            // do nothing
+            Log.i(TAG, "Room " + room + " clicked");
 
-            List<String> columnsToFetch = Arrays.asList
-                    ("Name", "Position", "Email", "Photo URL", "Scholar URL");
+            List<String> columnsToFetch = Arrays.asList("Name", "Position", "Email", "Photo URL", "Scholar URL");
             Map<String, String> teacherInfo = fetchDataByCondition
-                    ("Teachers_Basic_Information", columnsToFetch, "Location", room);
+                    ("Teachers_Basic_Information",
+                    columnsToFetch,
+                    "Location",
+                    "SD"+room);
 
             String name = teacherInfo.get("Name");
             String position = teacherInfo.get("Position");
@@ -247,9 +321,46 @@ public class BuildingActivity extends AppCompatActivity {
             String photo = teacherInfo.get("Photo URL");
             String details = teacherInfo.get("Scholar URL");
 
+            // 这里可以添加逻辑，显示教师信息
+            Log.i(TAG, "Name: " + name);
+            Log.i(TAG, "Position: " + position);
+            Log.i(TAG, "Email: " + email);
+            Log.i(TAG, "Photo URL: " + photo);
+            Log.i(TAG, "Scholar URL: " + details);
 
+
+            if(name==null||position==null||email==null||photo==null||details==null){
+                // 启动 TeacherBasicInfoActivity 并传递数据
+                Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
+                intent.putExtra("name", "XJTLU Member");
+                intent.putExtra("position", "N/A");
+                intent.putExtra("email", "N/A");
+                intent.putExtra("photo", "N/A");
+                intent.putExtra("details", "https://xjtlu.edu.cn/");
+                startActivity(intent);
+            }
+
+            // 启动 TeacherBasicInfoActivity 并传递数据
+            Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
+            intent.putExtra("name", name);
+            intent.putExtra("position", position);
+            intent.putExtra("email", email);
+            intent.putExtra("photo", photo);
+            intent.putExtra("details", details);
+            startActivity(intent);
         });
 
+
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // 触发返回操作
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -310,9 +421,6 @@ public class BuildingActivity extends AppCompatActivity {
     }
 
 
-
-
-
     /**
      * 通用查询方法，返回指定表和列的数据，基于单个条件。
      *
@@ -326,10 +434,21 @@ public class BuildingActivity extends AppCompatActivity {
         Map<String, String> result = new HashMap<>();
         Cursor cursor = null;
         try {
-            // 构建查询所需的列名字符串
-            String columnsList = String.join(", ", columns);
+            // 通过在列名周围添加双引号来处理列名中的空格
+            List<String> escapedColumns = new ArrayList<>();
+            for (String col : columns) {
+                escapedColumns.add("\"" + col + "\"");
+            }
+            String columnsList = String.join(", ", escapedColumns);
+
+            // 处理条件列名
+            String escapedConditionColumn = "\"" + conditionColumn + "\"";
+
+            // 处理表名
+            String escapedTableName = "\"" + tableName + "\"";
+
             // 构建查询语句
-            String query = "SELECT " + columnsList + " FROM " + tableName + " WHERE " + conditionColumn + " = ?";
+            String query = "SELECT " + columnsList + " FROM " + escapedTableName + " WHERE " + escapedConditionColumn + " = ?";
             cursor = database.rawQuery(query, new String[]{conditionValue});
 
             if (cursor != null && cursor.moveToFirst()) {
@@ -354,6 +473,7 @@ public class BuildingActivity extends AppCompatActivity {
         }
         return result;
     }
+
 
 
 }

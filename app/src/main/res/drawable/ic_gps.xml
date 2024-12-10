@@ -1,5 +1,27 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="30dp" android:tint="#FF0000" android:viewportHeight="24" android:viewportWidth="24" android:width="30dp">
-      
-    <path android:fillColor="#FFFF0000" android:pathData="M12,2C8.13,2 5,5.13 5,9c0,5.25 7,13 7,13s7,-7.75 7,-13c0,-3.87 -3.13,-7 -7,-7zM12,11.5c-1.38,0 -2.5,-1.12 -2.5,-2.5s1.12,-2.5 2.5,-2.5 2.5,1.12 2.5,2.5 -1.12,2.5 -2.5,2.5z"/>
-    
-</vector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 阴影层 -->
+    <item android:left="3dp" android:top="2dp" android:right="0dp" android:bottom="0dp">
+        <vector xmlns:android="http://schemas.android.com/apk/res/android"
+            android:height="30dp"
+            android:viewportHeight="24"
+            android:viewportWidth="24"
+            android:width="30dp">
+            <path android:fillColor="#C8C8C8"
+                android:pathData="M12,2C8.13,2 5,5.13 5,9c0,5.25 7,13 7,13s7,-7.75 7,-13c0,-3.87 -3.13,-7 -7,-7zM12,11.5c-1.38,0 -2.5,-1.12 -2.5,-2.5s1.12,-2.5 2.5,-2.5 2.5,1.12 2.5,2.5 -1.12,2.5 -2.5,2.5z"/>
+        </vector>
+    </item>
+
+    <!-- 图标层 -->
+    <item>
+        <vector xmlns:android="http://schemas.android.com/apk/res/android"
+            android:height="30dp"
+            android:viewportHeight="24"
+            android:viewportWidth="24"
+            android:width="30dp">
+            <path android:strokeColor="@android:color/black"
+                android:strokeWidth= "0.5"
+                android:fillColor="@color/orange"
+                android:pathData="M12,2C8.13,2 5,5.13 5,9c0,5.25 7,13 7,13s7,-7.75 7,-13c0,-3.87 -3.13,-7 -7,-7zM12,11.5c-1.38,0 -2.5,-1.12 -2.5,-2.5s1.12,-2.5 2.5,-2.5 2.5,1.12 2.5,2.5 -1.12,2.5 -2.5,2.5z"/>
+        </vector>
+    </item>
+</layer-list>
