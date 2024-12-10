@@ -74,8 +74,9 @@ public class TeacherBasicInfoActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            // 触发返回操作
-            onBackPressed();
+            Intent intent = new Intent(TeacherBasicInfoActivity.this, BuildingActivity.class);
+            startActivity(intent);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

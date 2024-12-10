@@ -274,7 +274,7 @@ public class BuildingActivity extends AppCompatActivity {
                                 map.setBounds(SD_2F);
                                 break;
                             case 2:
-                                map.setImageResource(R.drawable.not_yet_complete);
+                                map.setImageResource(R.drawable.sd3);
                                 map.setBounds(SD_3F);
                                 break;
                             case 3:
