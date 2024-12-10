@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SearchView;
@@ -172,13 +173,24 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        binding = FragmentMapBinding.inflate(inflater, container, false);
+        //View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+        View root = binding.getRoot();
 
-        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+        /*
         // 搜索按钮
         searchButton = rootView.findViewById(R.id.searchButton);
         searchView = rootView.findViewById(R.id.searchView);
         teacherSpinner = rootView.findViewById(R.id.teacherSpinner);
+*/
+
+        // 通过 binding 获取控件
+        searchButton = binding.searchButton;
+        searchView = binding.searchView;
+        teacherSpinner = binding.teacherSpinner;
+
         Log.i("Button状态", searchButton == null ? "searchButton 未找到" : "searchButton 已初始化");
+        Log.i("Button STA", searchButton == null ? "searchButton NO OK" : "searchButton OK!!!");
 
 // 设置搜索按钮点击事件
 // 设置搜索按钮点击事件 (使用 Lambda 表达式)
@@ -196,10 +208,38 @@ public class MapFragment extends Fragment {
         });
 
 
+        // 设置 Spinner 的选项选择监听器
+        teacherSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            boolean isFirstSelection = true; // 标记第一次初始化时的选择
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isFirstSelection) {
+                    isFirstSelection = false; // 第一次选择时不进行操作
+                    return;
+                }
+
+                String selectedTeacher = parent.getItemAtPosition(position).toString();
+                Log.i("Spinner选择", "Selected teacher: " + selectedTeacher);
+
+                // 创建 Intent，启动新的 Activity
+                Intent intent = new Intent(getActivity(), TeacherBasicInfoActivity.class);
+                intent.putExtra("teacherName", selectedTeacher);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // 不做任何操作
+            }
+        });
 
 
-        binding = FragmentMapBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+
+
+
+
+        //binding = FragmentMapBinding.inflate(inflater, container, false);
 
         mapView = binding.map;
         campusBar = binding.campusBar;

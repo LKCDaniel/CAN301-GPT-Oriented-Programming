@@ -39,11 +39,15 @@ public class TeacherBasicInfoActivity extends AppCompatActivity {
         String photoUrl = intent.getStringExtra("photo"); // 例如 "http://example.com/jianjun_chen.jpg"
         String detailsUrl = intent.getStringExtra("details");
 
-        Log.i("啊啊啊",position);
+        Log.i("啊啊啊",String.valueOf(position));
+
+
         // 设置数据到 UI 组件
-        binding.nameText.setText(name != null ? name : "N/A");
-        binding.positionText.setText(position != null ? position : "N/A");
-        binding.emailText.setText(email != null ? email : "N/A");
+        binding.nameText.setText(name);
+        binding.positionText.setText(position);
+        binding.emailText.setText(email);
+
+
 
         // 加载教师照片使用 Glide
         if (photoUrl != null && !photoUrl.isEmpty()) {

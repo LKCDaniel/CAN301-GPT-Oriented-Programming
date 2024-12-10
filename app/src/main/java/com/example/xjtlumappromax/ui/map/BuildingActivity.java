@@ -336,18 +336,21 @@ public class BuildingActivity extends AppCompatActivity {
                 intent.putExtra("position", "N/A");
                 intent.putExtra("email", "N/A");
                 intent.putExtra("photo", "N/A");
-                intent.putExtra("details", "https://xjtlu.edu.cn/");
+                intent.putExtra("details", "https://www.xjtlu.edu.cn/");
+                startActivity(intent);
+            }
+else {
+                // 启动 TeacherBasicInfoActivity 并传递数据
+                Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
+                intent.putExtra("name", name);
+                intent.putExtra("position", position);
+                intent.putExtra("email", email);
+                intent.putExtra("photo", photo);
+                intent.putExtra("details", details);
                 startActivity(intent);
             }
 
-            // 启动 TeacherBasicInfoActivity 并传递数据
-            Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
-            intent.putExtra("name", name);
-            intent.putExtra("position", position);
-            intent.putExtra("email", email);
-            intent.putExtra("photo", photo);
-            intent.putExtra("details", details);
-            startActivity(intent);
+
         });
 
 
