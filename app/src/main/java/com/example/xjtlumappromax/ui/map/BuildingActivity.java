@@ -329,6 +329,16 @@ public class BuildingActivity extends AppCompatActivity {
             Log.i(TAG, "Scholar URL: " + details);
 
 
+            if(name==null||position==null||email==null||photo==null||details==null){
+                // 启动 TeacherBasicInfoActivity 并传递数据
+                Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
+                intent.putExtra("name", "XJTLU Member");
+                intent.putExtra("position", "N/A");
+                intent.putExtra("email", "N/A");
+                intent.putExtra("photo", "N/A");
+                intent.putExtra("details", "https://xjtlu.edu.cn/");
+                startActivity(intent);
+            }
 
             // 启动 TeacherBasicInfoActivity 并传递数据
             Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
