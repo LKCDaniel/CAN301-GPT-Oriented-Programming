@@ -123,7 +123,6 @@ public class MapFragment extends Fragment {
 
         gpsTextView = binding.gpsTextView;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
-
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(1000);  // 每秒更新一次位置
         locationRequest.setFastestInterval(500);
@@ -159,7 +158,6 @@ public class MapFragment extends Fragment {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
             return;
         }
-
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 

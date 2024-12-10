@@ -44,9 +44,13 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.activity)
+    implementation(libs.room.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.android.gms:play-services-location:18.0.0")
+    implementation("androidx.room:room-runtime:2.5.0")
+    annotationProcessor("androidx.room:room-compiler:2.5.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")
 }

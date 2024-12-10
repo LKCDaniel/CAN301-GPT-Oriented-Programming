@@ -1,8 +1,12 @@
 package com.example.xjtlumappromax;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.example.xjtlumappromax.ui.friends.FriendsViewModel;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,10 +57,48 @@ public class DatabaseQueryHelper {
         return dataList;  // 返回查询结果
     }
 
+    public List<FriendsViewModel.Friend> getTopFriends() {
+        List<FriendsViewModel.Friend> topFriends = new ArrayList<>();
+        Cursor cursor = null;
+
+        try {
+            // 获取前三位
+            String query = "SELECT id, name, ranking FROM friends_table ORDER BY ranking DESC LIMIT 3";
+            cursor = db.rawQuery(query, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                    @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex("name"));
+                    @SuppressLint("Range") int ranking = cursor.getInt(cursor.getColumnIndex("ranking"));
+
+                    topFriends.add(new FriendsViewModel.Friend(id, name, ranking));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error querying top friends", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close(); // Close the cursor
+            }
+        }
+
+        return topFriends;
+    }
 
 
 
+    public static class Friend {
+        public String name;
+        public int score;
+        public int rank;
+        public int logoResId;
 
-
-
+        public Friend(String name, int score, int rank, int logoResId) {
+            this.name = name;
+            this.score = score;
+            this.rank = rank;
+            this.logoResId = logoResId;
+        }
+    }
 }
