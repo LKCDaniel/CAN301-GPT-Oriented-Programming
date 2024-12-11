@@ -3,6 +3,7 @@ package com.example.xjtlumappromax;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -14,12 +15,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
     private static final String TAG = "com.example.xjtlumappromax.MainActivity";
+    private ActivityMainBinding binding;
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
 
@@ -30,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_map, R.id.navigation_chat, R.id.navigation_friends, R.id.navigation_profile)
                 .build();
@@ -56,10 +55,6 @@ public class MainActivity extends AppCompatActivity {
             for (String data : result) {
                 Log.d(TAG, "Data为: " + data);
             }
-
-
-
-
 /*
             // 输出查询结果到控制台
             for (String data : result) {
@@ -67,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("Data: " + data);  // 直接打印到控制台
             }
 */
-
         } catch (IOException e) {
             e.printStackTrace();
         }

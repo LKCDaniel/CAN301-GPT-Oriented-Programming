@@ -1,7 +1,5 @@
 package com.example.xjtlumappromax.ui.map;
 
-import android.annotation.SuppressLint;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,7 +12,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.SeekBar;
@@ -35,29 +32,12 @@ import java.util.Map;
 public class BuildingActivity extends AppCompatActivity {
 
     private static final String TAG = "BuildingActivity";
-    private DatabaseHelper dbHelper;
-
-    private SQLiteDatabase database;
-
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler(Looper.myLooper());
+    private DatabaseHelper dbHelper;
+    private SQLiteDatabase database;
     private View mContentView;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -66,9 +46,6 @@ public class BuildingActivity extends AppCompatActivity {
                 mContentView.getWindowInsetsController().hide(
                         WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
             } else {
-                // Note that some of these constants are new as of API 16 (Jelly Bean)
-                // and API 19 (KitKat). It is safe to use them, as they are inlined
-                // at compile-time and do nothing on earlier devices.
                 mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -95,29 +72,6 @@ public class BuildingActivity extends AppCompatActivity {
         @Override
         public void run() {
             hide();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    if (AUTO_HIDE) {
-                        delayedHide(AUTO_HIDE_DELAY_MILLIS);
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    view.performClick();
-                    break;
-                default:
-                    break;
-            }
-            return false;
         }
     };
 
@@ -266,169 +220,9 @@ public class BuildingActivity extends AppCompatActivity {
         SD_1F.put("120", new float[]{0.6230075f, 0.109042056f, 0.8522333f, 0.31722826f});
         SD_1F.put("140A", new float[]{0.39329934f, 0.31722826f, 0.6230075f, 0.36519983f});
 
-        SD_1F.put("102", new float[]{0.59814f, 0.5247025f, 0.9863446f, 0.78246963f});
+        SD_1F.put("154", new float[]{0.59814f, 0.5247025f, 0.9863446f, 0.78246963f});
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        // 初始化 DatabaseHelper 和 SQLiteDatabase
-        dbHelper = new DatabaseHelper(this);
-        try {
-            dbHelper.createDatabase(); // 复制数据库文件
-            database = dbHelper.openDatabase(); // 打开数据库
-            Log.i(TAG, "111Database initialized successfully.");
-        } catch (IOException e) {
-            Log.e(TAG, "111Error initializing database", e);
-            // 这里可以选择终止应用或显示错误信息给用户
-            return;
-        }
-
-        if (database == null) {
-            Log.e(TAG, "111Database is null after initialization.");
-            return;
-        }
-
-
-
-        super.onCreate(savedInstanceState);
-
-        binding = ActivityBuildingBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
-            getSupportActionBar().setHomeButtonEnabled(true);  // 启用返回按钮的点击事件
-        }
-
-        mVisible = true;
-        mControlsView = binding.fullscreenContentControls;
-        mContentView = binding.fullscreenContent;
-
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-
-
-        String building = getIntent().getStringExtra("building");
-        InteractiveImageView map = binding.floorMap;
-        SeekBar floorBar = binding.floorBar;
-        floorBar.setProgress(0);
-        map.setImageResource(R.drawable.not_yet_complete);
-
-
-/*        switch (building) {
-            case "SD":
-                floorBar.setMax(4);
-                map.setImageResource(R.drawable.sd5);
-                map.setBounds(SD_5F);
-                break;
-            default:
-                map.setImageResource(R.drawable.not_yet_complete);
-        }*/
-
-        floorBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                switch (building) {
-                    case "SD":
-                        switch (seekBar.getProgress()) {
-                            case 0:
-                                map.setImageResource(R.drawable.not_yet_complete);
-                                map.setBounds(SD_1F);
-                                break;
-                            case 1:
-                                map.setImageResource(R.drawable.not_yet_complete);
-                                map.setBounds(SD_2F);
-                                break;
-                            case 2:
-                                map.setImageResource(R.drawable.not_yet_complete);
-                                map.setBounds(SD_3F);
-                                break;
-                            case 3:
-                                map.setImageResource(R.drawable.sd4);
-                                map.setBounds(SD_4F);
-                                break;
-                            case 4:
-                                map.setImageResource(R.drawable.sd5);
-                                map.setBounds(SD_5F);
-                                break;
-                        }
-
-                    case "SA":
-                        break;
-                }
-                Log.i("BuildingActivity", "Floor " + seekBar.getProgress() + " selected");
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // do nothing
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // do nothing
-            }
-        });
-
-        // 设置房间点击监听器
-        map.setOnBoundClickListener(room -> {
-            Log.i(TAG, "Room " + room + " clicked");
-
-            List<String> columnsToFetch = Arrays.asList("Name", "Position", "Email", "Photo URL", "Scholar URL");
-            Map<String, String> teacherInfo = fetchDataByCondition
-                    ("Teachers_Basic_Information",
-                    columnsToFetch,
-                    "Location",
-                    "SD"+room);
-
-            String name = teacherInfo.get("Name");
-            String position = teacherInfo.get("Position");
-            String email = teacherInfo.get("Email");
-            String photo = teacherInfo.get("Photo URL");
-            String details = teacherInfo.get("Scholar URL");
-
-            // 这里可以添加逻辑，显示教师信息
-            Log.i(TAG, "Name: " + name);
-            Log.i(TAG, "Position: " + position);
-            Log.i(TAG, "Email: " + email);
-            Log.i(TAG, "Photo URL: " + photo);
-            Log.i(TAG, "Scholar URL: " + details);
-
-
-            if(name==null||position==null||email==null||photo==null||details==null){
-                // 启动 TeacherBasicInfoActivity 并传递数据
-                Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
-                intent.putExtra("name", "XJTLU Member");
-                intent.putExtra("position", "N/A");
-                intent.putExtra("email", "N/A");
-                intent.putExtra("photo", "N/A");
-                intent.putExtra("details", "https://xjtlu.edu.cn/");
-                startActivity(intent);
-            }
-
-            // 启动 TeacherBasicInfoActivity 并传递数据
-            Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
-            intent.putExtra("name", name);
-            intent.putExtra("position", position);
-            intent.putExtra("email", email);
-            intent.putExtra("photo", photo);
-            intent.putExtra("details", details);
-            startActivity(intent);
-        });
-
-
-
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -437,16 +231,6 @@ public class BuildingActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
     }
 
     private void toggle() {
@@ -494,6 +278,156 @@ public class BuildingActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityBuildingBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // 初始化 DatabaseHelper 和 SQLiteDatabase
+        dbHelper = new DatabaseHelper(this);
+        try {
+            dbHelper.createDatabase(); // 复制数据库文件
+            database = dbHelper.openDatabase(); // 打开数据库
+            Log.i(TAG, "111Database initialized successfully.");
+        } catch (IOException e) {
+            Log.e(TAG, "111Error initializing database", e);
+            // 这里可以选择终止应用或显示错误信息给用户
+            return;
+        }
+
+        if (database == null) {
+            Log.e(TAG, "111Database is null after initialization.");
+            return;
+        }
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
+            getSupportActionBar().setHomeButtonEnabled(true);  // 启用返回按钮的点击事件
+        }
+
+        mVisible = true;
+        mControlsView = binding.fullscreenContentControls;
+        mContentView = binding.fullscreenContent;
+
+        // Set up the user interaction to manually show or hide the system UI.
+        mContentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggle();
+            }
+        });
+
+        String building = getIntent().getStringExtra("building");
+        InteractiveImageView map = binding.floorMap;
+        SeekBar floorBar = binding.floorBar;
+
+        floorBar.setProgress(0);
+        switch (building) {
+            case "SD":
+                floorBar.setMax(4);
+                map.setImageResource(R.drawable.sd1);
+                map.setBounds(SD_1F);
+                break;
+            default:
+                map.setImageResource(R.drawable.not_yet_complete);
+        }
+
+        floorBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                switch (building) {
+                    case "SD":
+                        switch (seekBar.getProgress()) {
+                            case 0:
+                                map.setImageResource(R.drawable.sd1);
+                                map.setBounds(SD_1F);
+                                break;
+                            case 1:
+                                map.setImageResource(R.drawable.sd2);
+                                map.setBounds(SD_2F);
+                                break;
+                            case 2:
+                                map.setImageResource(R.drawable.sd3);
+                                map.setBounds(SD_3F);
+                                break;
+                            case 3:
+                                map.setImageResource(R.drawable.sd4);
+                                map.setBounds(SD_4F);
+                                break;
+                            case 4:
+                                map.setImageResource(R.drawable.sd5);
+                                map.setBounds(SD_5F);
+                                break;
+                        }
+                    case "SA":
+                        break;
+                }
+                Log.i("BuildingActivity", "Floor " + seekBar.getProgress() + " selected");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        // 设置房间点击监听器
+        map.setOnBoundClickListener(room -> {
+            Log.i(TAG, "Room " + room + " clicked");
+
+            List<String> columnsToFetch = Arrays.asList("Name", "Position", "Email", "Photo URL", "Scholar URL");
+            Map<String, String> teacherInfo = fetchDataByCondition
+                    ("Teachers_Basic_Information",
+                            columnsToFetch,
+                            "Location",
+                            "SD" + room);
+
+            String name = teacherInfo.get("Name");
+            String position = teacherInfo.get("Position");
+            String email = teacherInfo.get("Email");
+            String photo = teacherInfo.get("Photo URL");
+            String details = teacherInfo.get("Scholar URL");
+
+            // 这里可以添加逻辑，显示教师信息
+            Log.i(TAG, "Name: " + name);
+            Log.i(TAG, "Position: " + position);
+            Log.i(TAG, "Email: " + email);
+            Log.i(TAG, "Photo URL: " + photo);
+            Log.i(TAG, "Scholar URL: " + details);
+
+
+            if (name == null || position == null || email == null || photo == null || details == null) {
+                // 启动 TeacherBasicInfoActivity 并传递数据
+                Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
+                intent.putExtra("name", "XJTLU Member");
+                intent.putExtra("position", "N/A");
+                intent.putExtra("email", "N/A");
+                intent.putExtra("photo", "N/A");
+                intent.putExtra("details", "https://xjtlu.edu.cn/");
+                startActivity(intent);
+            }
+
+            // 启动 TeacherBasicInfoActivity 并传递数据
+            Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
+            intent.putExtra("name", name);
+            intent.putExtra("position", position);
+            intent.putExtra("email", email);
+            intent.putExtra("photo", photo);
+            intent.putExtra("details", details);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        delayedHide(100);
     }
 
 
@@ -549,7 +483,6 @@ public class BuildingActivity extends AppCompatActivity {
         }
         return result;
     }
-
 
 
 }
