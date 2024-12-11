@@ -234,16 +234,6 @@ public class InteractiveImageView extends AppCompatImageView {
             float scaleFactorChange = detector.getScaleFactor();
             float[] matrixValues = new float[9];
             matrix.getValues(matrixValues);
-//            float currentScale = matrixValues[Matrix.MSCALE_X];
-//            float newScale = currentScale * scaleFactorChange;
-//            float minZoom = (float) Math.sqrt(getDrawable().getIntrinsicWidth()) * 8E-3f;
-//            float maxZoom = (float) Math.sqrt(getDrawable().getIntrinsicWidth()) * 4E-2f;
-//            if (newScale < minZoom) {
-//                scaleFactorChange = minZoom / currentScale;
-//            } else if (newScale > maxZoom) {
-//                scaleFactorChange = maxZoom / currentScale;
-//            }
-
             float px = getWidth() / 2.0f;
             float py = getHeight() / 2.0f;
             matrix.postScale(scaleFactorChange, scaleFactorChange, px, py);
