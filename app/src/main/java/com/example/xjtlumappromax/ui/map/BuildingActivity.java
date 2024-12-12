@@ -1,5 +1,7 @@
 package com.example.xjtlumappromax.ui.map;
 
+import android.annotation.SuppressLint;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.SeekBar;
@@ -35,9 +38,27 @@ public class BuildingActivity extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler(Looper.myLooper());
     private DatabaseHelper dbHelper;
-    private SQLiteDatabase database;
-    private View mContentView;
 
+    private SQLiteDatabase database;
+
+    /**
+     * Whether or not the system UI should be auto-hidden after
+     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
+     */
+    private static final boolean AUTO_HIDE = true;
+
+    /**
+     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
+     * user interaction before hiding the system UI.
+     */
+    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+
+    /**
+     * Some older devices needs a small delay between UI widget updates
+     * and a change of the status and navigation bar.
+     */
+
+    private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -46,6 +67,9 @@ public class BuildingActivity extends AppCompatActivity {
                 mContentView.getWindowInsetsController().hide(
                         WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
             } else {
+                // Note that some of these constants are new as of API 16 (Jelly Bean)
+                // and API 19 (KitKat). It is safe to use them, as they are inlined
+                // at compile-time and do nothing on earlier devices.
                 mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -303,6 +327,13 @@ public class BuildingActivity extends AppCompatActivity {
             return;
         }
 
+
+
+
+
+        binding = ActivityBuildingBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
             getSupportActionBar().setHomeButtonEnabled(true);  // 启用返回按钮的点击事件
@@ -384,9 +415,9 @@ public class BuildingActivity extends AppCompatActivity {
             List<String> columnsToFetch = Arrays.asList("Name", "Position", "Email", "Photo URL", "Scholar URL");
             Map<String, String> teacherInfo = fetchDataByCondition
                     ("Teachers_Basic_Information",
-                            columnsToFetch,
-                            "Location",
-                            "SD" + room);
+                    columnsToFetch,
+                    "Location",
+                    "SD"+room);
 
             String name = teacherInfo.get("Name");
             String position = teacherInfo.get("Position");
@@ -412,15 +443,18 @@ public class BuildingActivity extends AppCompatActivity {
                 intent.putExtra("details", "https://xjtlu.edu.cn/");
                 startActivity(intent);
             }
+else {
+                // 启动 TeacherBasicInfoActivity 并传递数据
+                Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
+                intent.putExtra("name", name);
+                intent.putExtra("position", position);
+                intent.putExtra("email", email);
+                intent.putExtra("photo", photo);
+                intent.putExtra("details", details);
+                startActivity(intent);
+            }
 
-            // 启动 TeacherBasicInfoActivity 并传递数据
-            Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
-            intent.putExtra("name", name);
-            intent.putExtra("position", position);
-            intent.putExtra("email", email);
-            intent.putExtra("photo", photo);
-            intent.putExtra("details", details);
-            startActivity(intent);
+
         });
     }
 

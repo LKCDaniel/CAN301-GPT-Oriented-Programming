@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SearchView;
@@ -39,6 +40,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationRequest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,13 +174,24 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        binding = FragmentMapBinding.inflate(inflater, container, false);
+        //View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+        View root = binding.getRoot();
 
-        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+        /*
         // 搜索按钮
         searchButton = rootView.findViewById(R.id.searchButton);
         searchView = rootView.findViewById(R.id.searchView);
         teacherSpinner = rootView.findViewById(R.id.teacherSpinner);
+*/
+
+        // 通过 binding 获取控件
+        searchButton = binding.searchButton;
+        searchView = binding.searchView;
+        teacherSpinner = binding.teacherSpinner;
+
         Log.i("Button状态", searchButton == null ? "searchButton 未找到" : "searchButton 已初始化");
+        Log.i("Button STA", searchButton == null ? "searchButton NO OK" : "searchButton OK!!!");
 
 // 设置搜索按钮点击事件
 // 设置搜索按钮点击事件 (使用 Lambda 表达式)
@@ -191,15 +204,94 @@ public class MapFragment extends Fragment {
                 Log.i("searchButton结果", results.toString());
                 updateTeacherSpinner(results); // 更新 Spinner 的数据
             } else {
-                Toast.makeText(getContext(), "请输入搜索内容", Toast.LENGTH_SHORT).show(); // 提示用户输入
+                Toast.makeText(getContext(), "Type content to search", Toast.LENGTH_SHORT).show(); // 提示用户输入
             }
         });
 
 
 
 
-        binding = FragmentMapBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+
+        // 设置 Spinner 的选项选择监听器
+        teacherSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            boolean isFirstSelection = true; // 标记第一次初始化时的选择
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isFirstSelection) {
+                    isFirstSelection = false; // 第一次选择时不进行操作
+                    return;
+                }
+
+                String selectedTeacher = parent.getItemAtPosition(position).toString().trim();
+                Log.i("Spinner选择", "Selected teacher: " + selectedTeacher);
+
+                if (selectedTeacher.equals("选择老师")) {
+                    // 默认提示项，忽略
+                    return;
+                }
+
+                // 查询教师详细信息
+                List<String> columnsToFetch = Arrays.asList("Name", "Position", "Email", "Photo URL", "Scholar URL");
+                Map<String, String> teacherInfo = fetchDataByCondition(
+                        "Teachers_Basic_Information",
+                        columnsToFetch,
+                        "Name",
+                        selectedTeacher
+                );
+
+                // 获取数据
+                String name = teacherInfo.get("Name");
+                String teacherposition = teacherInfo.get("Position");
+                String email = teacherInfo.get("Email");
+                String photo = teacherInfo.get("Photo URL");
+                String details = teacherInfo.get("Scholar URL");
+
+                // 打印日志
+                Log.i("TeacherInfo is", "Name: " + name);
+                Log.i("TeacherInfo is", "Position: " + teacherposition);
+                Log.i("TeacherInfo is55", "Email: " + email);
+                Log.i("TeacherInfo is 55" , "Photo URL: " + photo);
+                Log.i("TeacherInfo", "Scholar URL: " + details);
+
+
+
+
+                if(name==null||teacherposition==null||email==null||photo==null||details==null){
+                    // 使用 getContext() 或 requireActivity() 获取上下文
+                    Intent intent = new Intent(requireActivity(), TeacherBasicInfoActivity.class);
+                    intent.putExtra("name", "XJTLU Member");
+                    intent.putExtra("position", "N/A");
+                    intent.putExtra("email", "N/A");
+                    intent.putExtra("photo", "N/A");
+                    intent.putExtra("details", "https://www.xjtlu.edu.cn/");
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(requireActivity(), TeacherBasicInfoActivity.class);
+                    intent.putExtra("name", name);
+                    intent.putExtra("position", teacherposition);
+                    intent.putExtra("email", email);
+                    intent.putExtra("photo", photo);
+                    intent.putExtra("details", details);
+                    startActivity(intent);
+                }
+
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // 不做任何操作
+            }
+        });
+
+
+
+
+
+
+        //binding = FragmentMapBinding.inflate(inflater, container, false);
 
         mapView = binding.map;
         campusBar = binding.campusBar;
@@ -357,5 +449,63 @@ public class MapFragment extends Fragment {
         }
 
         return teacherNames;
+    }
+
+
+
+
+
+
+    /**
+     * 通用查询方法，返回指定表和列的数据，基于单个条件。
+     *
+     * @param tableName       要查询的表名。
+     * @param columns         要查询的列的列表。
+     * @param conditionColumn 用于条件判断的列名。
+     * @param conditionValue  条件列的值。
+     * @return 包含查询结果的映射，键为列名，值为对应的数据。
+     */
+    public Map<String, String> fetchDataByCondition(String tableName, List<String> columns, String conditionColumn, String conditionValue) {
+        Map<String, String> result = new HashMap<>();
+        Cursor cursor = null;
+        try {
+            // 通过在列名周围添加双引号来处理列名中的空格
+            List<String> escapedColumns = new ArrayList<>();
+            for (String col : columns) {
+                escapedColumns.add("\"" + col + "\"");
+            }
+            String columnsList = String.join(", ", escapedColumns);
+
+            // 处理条件列名
+            String escapedConditionColumn = "\"" + conditionColumn + "\"";
+
+            // 处理表名
+            String escapedTableName = "\"" + tableName + "\"";
+
+            // 构建查询语句
+            String query = "SELECT " + columnsList + " FROM " + escapedTableName + " WHERE " + escapedConditionColumn + " = ?";
+            cursor = database.rawQuery(query, new String[]{conditionValue});
+
+            if (cursor != null && cursor.moveToFirst()) {
+                for (String column : columns) {
+                    int index = cursor.getColumnIndex(column);
+                    if (index != -1) {
+                        result.put(column, cursor.getString(index));
+                    } else {
+                        Log.e("MAP", "Column '" + column + "' not found in table '" + tableName + "'");
+                        result.put(column, "Column not found");
+                    }
+                }
+            } else {
+                Log.d("MAP", "No data found for " + conditionColumn + " = " + conditionValue);
+            }
+        } catch (Exception e) {
+            Log.e("MAP", "Error querying database for " + conditionColumn + " = " + conditionValue, e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return result;
     }
 }

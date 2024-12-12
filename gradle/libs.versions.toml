@@ -13,7 +13,6 @@ navigationUi = "2.6.0"
 activity = "1.8.0"
 roomCommon = "2.6.1"
 glide = "5.0.0-rc01"
-
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -28,7 +27,6 @@ navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
-
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 
