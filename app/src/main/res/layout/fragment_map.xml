@@ -30,25 +30,25 @@
         android:layout_margin="16dp"
         tools:ignore="MissingConstraints" />
 
-    <SeekBar
-        android:id="@+id/campus_bar"
-        style="@android:style/Widget.Material.SeekBar.Discrete"
-        android:layout_width="60dp"
-        android:layout_height="62dp"
-        android:max="1"
-        android:progress="0"
-        android:visibility="visible"
-        tools:ignore="MissingConstraints" />
-
-    <!-- 添加 Spinner 控件 -->
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         tools:context=".MainActivity"
-        tools:layout_editor_absoluteX="25dp"
-        tools:layout_editor_absoluteY="-16dp">
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:ignore="MissingConstraints">
+
+        <SeekBar
+            android:id="@+id/campus_bar"
+            style="@android:style/Widget.Material.SeekBar.Discrete"
+            android:layout_width="60dp"
+            android:layout_height="55dp"
+            android:max="1"
+            android:progress="0"
+            android:visibility="visible"
+            tools:ignore="MissingConstraints" />
 
         <SearchView
             android:id="@+id/searchView"
@@ -57,10 +57,14 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="16dp"
             android:layout_marginTop="6dp"
-            android:layout_marginEnd="124dp"
+            android:layout_marginEnd="110dp"
             android:background="@drawable/edit_text_bg"
             android:elevation="8dp"
-            android:iconifiedByDefault="true" />
+            android:iconifiedByDefault="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <Button
             android:id="@+id/searchButton"
@@ -69,13 +73,24 @@
             android:layout_below="@id/searchView"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="-44dp"
-            android:layout_marginEnd="23dp"
-            android:text="search" />
+            android:layout_marginEnd="5dp"
+            android:text="search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <Spinner
             android:id="@+id/teacherSpinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="195dp"
+            android:layout_marginTop="38dp"
+            android:minHeight="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
 
     </RelativeLayout>
