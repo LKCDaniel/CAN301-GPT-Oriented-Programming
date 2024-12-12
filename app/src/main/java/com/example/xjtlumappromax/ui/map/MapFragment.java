@@ -38,6 +38,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationRequest;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -150,22 +151,25 @@ public class MapFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 在 onCreate 中获取 Context 并初始化数据库
+        // 获取 Context 并初始化 DatabaseHelper 的单例
         Context context = getContext();
         if (context == null) {
             throw new IllegalStateException("Context is null, cannot initialize DatabaseHelper.");
         }
 
-        if (context != null) {
-            DatabaseHelper dbHelper = new DatabaseHelper(context);
-            database = dbHelper.getReadableDatabase(); // 获取数据库
-            Log.i("database数据库","数据库成功初始化");
+        try {
+            DatabaseHelper dbHelper = DatabaseHelper.getInstance(context); // 获取单例实例
+            database = dbHelper.getDatabase(); // 获取全局数据库实例
+            Log.i("database数据库", "数据库成功初始化");
+        } catch (IOException e) {
+            Log.e("database数据库", "初始化数据库失败", e);
         }
 
 
-        List<String> testname=fuzzySearchName("Li");
+        // 测试模糊查询
+        List<String> testname = fuzzySearchName("Li");
         Log.i("数据库测试结果", testname.toString());
-        //如果logcat中出现了[Dawei Liu, Lijie Yao, Lingyun Yu, Nanlin Jin,这样就成功了
+        // 如果 Logcat 中出现了 "[Dawei Liu, Lijie Yao, Lingyun Yu, Nanlin Jin]"，说明成功
     }
 
 
@@ -418,10 +422,6 @@ public class MapFragment extends Fragment {
         fusedLocationClient.removeLocationUpdates(locationCallback);
 
 
-//防止数据内存泄露哈
-        if (database != null) {
-            database.close();
-        }
     }
 
     // 在这里做数据库相关的操作，比如模糊查询

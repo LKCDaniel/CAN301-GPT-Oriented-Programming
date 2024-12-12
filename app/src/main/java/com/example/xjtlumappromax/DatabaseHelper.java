@@ -18,14 +18,35 @@ import java.util.Map;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+
     private static final String DB_NAME = "CAN301.sqlite";  // 数据库文件名
-    private SQLiteDatabase myDatabase;
+    private static DatabaseHelper instance;  // 单例实例
+    private static SQLiteDatabase database;  // 全局数据库实例
     private final Context myContext;
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, 1);
         this.myContext = context;
     }
+
+
+    // 获取单例实例
+    public static synchronized DatabaseHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DatabaseHelper(context.getApplicationContext());
+        }
+        return instance;
+    }
+
+
+    public synchronized SQLiteDatabase getDatabase() throws IOException {
+        if (database == null || !database.isOpen()) {
+            createDatabase();
+            database = openDatabase();
+        }
+        return database;
+    }
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -81,9 +102,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // 打开数据库
     public SQLiteDatabase openDatabase() throws SQLException {
         String dbPath = myContext.getDatabasePath(DB_NAME).getPath();
-        SQLiteDatabase db = null;
+        Log.i("dbPath数据库为",dbPath);
+        SQLiteDatabase db;
         try {
             db = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
+            Log.i("dbPath数据库为", String.valueOf(db));
+
         } catch (SQLException e) {
             Log.e("DatabaseHelper", "Error opening database", e);
             throw new SQLException("Error opening database", e);
@@ -98,8 +122,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // 关闭数据库
     @Override
     public synchronized void close() {
-        if (myDatabase != null) {
-            myDatabase.close();
+        if (database != null) {
+            database.close();
         }
         super.close();
     }

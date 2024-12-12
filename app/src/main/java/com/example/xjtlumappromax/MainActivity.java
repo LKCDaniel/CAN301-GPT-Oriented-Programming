@@ -21,11 +21,31 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "com.example.xjtlumappromax.MainActivity";
     private ActivityMainBinding binding;
-    private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DatabaseHelper dbHelper = DatabaseHelper.getInstance(this);
+
+
+        try {
+            db = dbHelper.getDatabase();
+
+            // 创建查询助手对象
+            DatabaseQueryHelper queryHelper = new DatabaseQueryHelper(db);
+
+            List<String> result = queryHelper.getAllDataFromTable("Profile_and_Interests", "Name");
+
+            // 输出查询结果
+            for (String data : result) {
+                Log.d(TAG, "Data为: " + data);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -38,40 +58,19 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
 
-        dbHelper = new DatabaseHelper(this);
 
-        //先复制和创建数据库
-        try {
-            dbHelper.createDatabase();  // 创建并复制数据库
-            db = dbHelper.openDatabase();  // 打开数据库
-
-            // 创建查询助手对象
-            DatabaseQueryHelper queryHelper = new DatabaseQueryHelper(db);
-
-            List<String> result = queryHelper.getAllDataFromTable("Profile_and_Interests", "Name");
-
-            // 输出查询结果
-            for (String data : result) {
-                Log.d(TAG, "Data为: " + data);
-            }
-/*
-            // 输出查询结果到控制台
-            for (String data : result) {
-                // 使用 System.out.println() 将数据打印到控制台
-                System.out.println("Data: " + data);  // 直接打印到控制台
-            }
-*/
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
+
+
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (dbHelper != null) {
-            dbHelper.close();  // 关闭数据库
+        if (db != null && db.isOpen()) {
+            db.close();  // 关闭数据库
+            Log.i("DDDB","数据库删除destroy");
         }
     }
 }

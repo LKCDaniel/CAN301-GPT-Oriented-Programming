@@ -311,19 +311,19 @@ public class BuildingActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // 初始化 DatabaseHelper 和 SQLiteDatabase
-        dbHelper = new DatabaseHelper(this);
         try {
-            dbHelper.createDatabase(); // 复制数据库文件
-            database = dbHelper.openDatabase(); // 打开数据库
-            Log.i(TAG, "111Database initialized successfully.");
+            // 获取单例 DatabaseHelper
+            dbHelper = DatabaseHelper.getInstance(this);
+            database = dbHelper.getDatabase(); // 获取全局共享的数据库实例
+            Log.i(TAG, "Database initialized successfully.");
         } catch (IOException e) {
-            Log.e(TAG, "111Error initializing database", e);
+            Log.e(TAG, "Error initializing database", e);
             // 这里可以选择终止应用或显示错误信息给用户
             return;
         }
 
         if (database == null) {
-            Log.e(TAG, "111Database is null after initialization.");
+            Log.e(TAG, "Database is null after initialization.");
             return;
         }
 
