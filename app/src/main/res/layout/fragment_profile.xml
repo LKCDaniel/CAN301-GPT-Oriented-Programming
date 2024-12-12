@@ -35,7 +35,7 @@
         android:layout_marginTop="30dp"
         android:fontFamily="@font/carterone"
         android:gravity="center"
-        android:text="Name: Bird"
+        android:text=""
         android:textColor="@color/black"
         android:textSize="23sp"
         android:background="@drawable/name_text"

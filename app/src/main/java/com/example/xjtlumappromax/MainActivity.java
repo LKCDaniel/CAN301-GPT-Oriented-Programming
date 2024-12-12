@@ -24,10 +24,14 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase db;
 
 
+    public static String userName = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         DatabaseHelper dbHelper = DatabaseHelper.getInstance(this);
 
+        userName = getIntent().getExtras().getString("username", "User");
+        Log.i(TAG, "Username: " + userName);
 
         try {
             db = dbHelper.getDatabase();
@@ -50,7 +54,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-      AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+        userName = getIntent().getExtras().getString("username", "User");
+        Log.i(TAG, "Username: " + userName);
+
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_map, R.id.navigation_chat, R.id.navigation_friends, R.id.navigation_profile)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);

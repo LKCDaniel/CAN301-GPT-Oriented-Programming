@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.xjtlumappromax.MainActivity;
 import com.example.xjtlumappromax.R;
 import com.example.xjtlumappromax.databinding.FragmentProfileBinding;
 import com.example.xjtlumappromax.ui.map.MapFragment;
@@ -87,7 +88,7 @@ public class ProfileFragment extends Fragment {
         // Load saved data for other fields (except location)
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Userprofile", Context.MODE_PRIVATE);
 
-        String name = sharedPreferences.getString("name", "Bird");
+        String name = sharedPreferences.getString("name", MainActivity.userName);
         String gender = sharedPreferences.getString("gender", "Male");
         String major = sharedPreferences.getString("major", "Computer Science");
         String hobby = sharedPreferences.getString("hobby", "Reading");

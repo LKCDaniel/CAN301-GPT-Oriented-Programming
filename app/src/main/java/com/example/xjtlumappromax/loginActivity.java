@@ -60,10 +60,10 @@ public class loginActivity extends AppCompatActivity {
         loginButton.setEnabled(false); // 初始时按钮禁用
         forgetTextView.setVisibility(View.GONE); // 初始时隐藏 forget
 
-        // 测试专用（上线记得注释掉！）
-        usernameEditText.setText("Bird");
-        passwordEditText.setText("123456");
-        loginButton.setEnabled(true);
+//        // 测试专用（上线记得注释掉！）
+//        usernameEditText.setText("Bird");
+//        passwordEditText.setText("123456");
+//        loginButton.setEnabled(true);
 
         // 添加 TextWatcher 来监听用户名和密码的输入变化
         usernameEditText.addTextChangedListener(inputWatcher);
@@ -82,6 +82,7 @@ public class loginActivity extends AppCompatActivity {
                 editor.apply();  // 保存数据
 
                 Intent intent = new Intent(loginActivity.this, MainActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -104,6 +105,7 @@ public class loginActivity extends AppCompatActivity {
             if (!username.isEmpty() && !password.isEmpty()) {
                 loginButton.setEnabled(true);  // 启用按钮
                 forgetTextView.setVisibility(View.GONE); // 隐藏 forget 提示
+
             } else {
                 loginButton.setEnabled(false); // 禁用按钮
                 if (username.isEmpty() || password.isEmpty()) {
