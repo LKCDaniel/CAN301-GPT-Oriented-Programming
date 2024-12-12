@@ -338,6 +338,7 @@ public class MapFragment extends Fragment {
 
 //        gpsTextView = binding.gpsTextView;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
+        mapView.setGpsPosition(0.56f, 0.53f);
 
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(1000);  // 每秒更新一次位置
@@ -362,7 +363,6 @@ public class MapFragment extends Fragment {
                         mapView.setGpsPosition(gpsPosition[0], gpsPosition[1]);
                     } else {
 //                        mapView.cancelGpsDraw();
-                        mapView.setGpsPosition(0.56f, 0.53f);
                     }
 
                 }

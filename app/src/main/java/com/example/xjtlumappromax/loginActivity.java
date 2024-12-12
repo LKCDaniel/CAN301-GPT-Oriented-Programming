@@ -25,6 +25,7 @@ public class loginActivity extends AppCompatActivity {
     private EditText usernameEditText, passwordEditText;
     private TextView forgetTextView;
     private Button loginButton;
+    private DatabaseHelper dbHelper;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -116,5 +117,15 @@ public class loginActivity extends AppCompatActivity {
             // 不需要实现
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 释放数据库资源
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
+    }
+
 
 }
