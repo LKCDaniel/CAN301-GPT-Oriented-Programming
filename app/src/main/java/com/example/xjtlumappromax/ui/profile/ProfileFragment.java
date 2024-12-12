@@ -1,4 +1,4 @@
-package com.example.xjtlumappromax.ui.profile.map;
+package com.example.xjtlumappromax.ui.profile;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,10 +12,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.xjtlumappromax.MainActivity;
-import com.example.xjtlumappromax.R;
 import com.example.xjtlumappromax.databinding.FragmentProfileBinding;
 import com.example.xjtlumappromax.ui.map.MapFragment;
 
