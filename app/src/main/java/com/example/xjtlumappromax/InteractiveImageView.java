@@ -83,6 +83,9 @@ public class InteractiveImageView extends AppCompatImageView {
                     lastX = midX;
                     lastY = midY;
                 } else {
+                    if (!singleFinger) {
+                        break;
+                    }
                     dx = event.getX() - lastX;
                     dy = event.getY() - lastY;
                     lastX = event.getX();
@@ -190,19 +193,6 @@ public class InteractiveImageView extends AppCompatImageView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (gpsDrawable != null) {
-            float[] gpsCords = {gpsX * getDrawable().getIntrinsicWidth(), gpsY * getDrawable().getIntrinsicHeight()};
-            matrix.mapPoints(gpsCords);
-            int drawableWidth = gpsDrawable.getIntrinsicWidth();
-            int drawableHeight = gpsDrawable.getIntrinsicHeight();
-            gpsDrawable.setBounds(
-                    (int) (gpsCords[0] - drawableWidth / 2),
-                    (int) (gpsCords[1] - drawableHeight / 2),
-                    (int) (gpsCords[0] + drawableWidth / 2),
-                    (int) (gpsCords[1] + drawableHeight / 2)
-            );
-            gpsDrawable.draw(canvas);
-        }
         if (markerDrawable != null && bounds != null) {
             for (String boundName : bounds.keySet()) {
                 float[] bounds = this.bounds.get(boundName);
@@ -221,6 +211,19 @@ public class InteractiveImageView extends AppCompatImageView {
                 );
                 markerDrawable.draw(canvas);
             }
+        }
+        if (gpsDrawable != null) {
+            float[] gpsCords = {gpsX * getDrawable().getIntrinsicWidth(), gpsY * getDrawable().getIntrinsicHeight()};
+            matrix.mapPoints(gpsCords);
+            int drawableWidth = gpsDrawable.getIntrinsicWidth();
+            int drawableHeight = gpsDrawable.getIntrinsicHeight();
+            gpsDrawable.setBounds(
+                    (int) (gpsCords[0] - drawableWidth / 2),
+                    (int) (gpsCords[1] - drawableHeight / 2),
+                    (int) (gpsCords[0] + drawableWidth / 2),
+                    (int) (gpsCords[1] + drawableHeight / 2)
+            );
+            gpsDrawable.draw(canvas);
         }
     }
 

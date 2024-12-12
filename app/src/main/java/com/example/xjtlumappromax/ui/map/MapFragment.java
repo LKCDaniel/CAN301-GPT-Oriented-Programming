@@ -27,7 +27,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.xjtlumappromax.DatabaseHelper;
 import com.example.xjtlumappromax.InteractiveImageView;
@@ -324,8 +323,8 @@ public class MapFragment extends Fragment {
             }
         });
 
-        mapView.setMarkerDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_gps));
-
+        mapView.setMarkerDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_marker));
+        mapView.setGpsDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_gps));
 
         mapView.setOnBoundClickListener(building -> {
             Intent intent = new Intent(getContext(), BuildingActivity.class);
@@ -333,7 +332,7 @@ public class MapFragment extends Fragment {
             startActivity(intent);
         });
 
-        gpsTextView = binding.gpsTextView;
+//        gpsTextView = binding.gpsTextView;
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         locationRequest = LocationRequest.create();
@@ -349,16 +348,19 @@ public class MapFragment extends Fragment {
                     Location location = locationResult.getLastLocation();
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
-                    gpsTextView.setText("Current GPS: " + latitude + ", " + longitude);
+//                    gpsTextView.setText("Current GPS: " + latitude + ", " + longitude);
                     gpsPosition = transformGpsToImageCoord(longitude, latitude);
+                    Log.i("gpsPosition", gpsPosition[0] + " " + gpsPosition[1]);
                     if (gpsPosition[0] >= 0 && gpsPosition[0] <= 1 && gpsPosition[0] >= 0 && gpsPosition[0] <= 1) {
                         if (!mapView.isGpsDrawn()) {
                             mapView.setGpsDraw(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_gps));
                         }
+                        mapView.setGpsPosition(gpsPosition[0], gpsPosition[1]);
                     } else {
-                        mapView.cancelGpsDraw();
+//                        mapView.cancelGpsDraw();
+                        mapView.setGpsPosition(0.56f, 0.53f);
                     }
-                    mapView.setGpsPosition(gpsPosition[0], gpsPosition[1]);
+
                 }
             }
         };
