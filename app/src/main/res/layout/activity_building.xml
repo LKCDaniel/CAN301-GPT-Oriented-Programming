@@ -21,12 +21,41 @@
         android:textSize="50sp"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/first_name"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="1dp"
+        android:elevation="8dp"
+        android:fontFamily="@font/carterone"
+        android:gravity="center"
+        android:text="Tap to Exit Fullscreen"
+        android:textAllCaps="false"
+        android:textColor="#C8C8C8"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.407" />
+
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
+        <SeekBar
+            android:id="@+id/floorBar"
+            style="@android:style/Widget.DeviceDefault.Light.SeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="4"
+            android:progress="4"
+            android:splitTrack="true"
+            android:layout_marginTop="10dp"/>
 
         <LinearLayout
             android:id="@+id/fullscreen_content_controls"
@@ -42,19 +71,11 @@
             android:id="@+id/floorMap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="50dp"
             android:src="@drawable/sd4"
             tools:srcCompat="@tools:sample/avatars" />
 
     </FrameLayout>
-    <SeekBar
-        android:id="@+id/floorBar"
-        style="@android:style/Widget.DeviceDefault.Light.SeekBar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:max="4"
-        android:progress="4"
-        android:splitTrack="true"
-        android:layout_marginTop="20dp"/>
+
 
 </FrameLayout>

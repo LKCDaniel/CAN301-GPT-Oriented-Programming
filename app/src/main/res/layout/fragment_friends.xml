@@ -15,10 +15,10 @@
         android:src="@drawable/circle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/rank"
@@ -38,34 +38,34 @@
         android:id="@+id/first_logo"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:scaleType="centerCrop"
         android:layout_marginBottom="1dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/rank1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.342" />
+        app:layout_constraintVertical_bias="0.27" />
 
     <TextView
         android:id="@+id/first_name"
         android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:elevation="8dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="1dp"
+        android:elevation="8dp"
         android:fontFamily="@font/carterone"
         android:gravity="center"
-        android:text="田邦序"
+        android:text="Bangxu Tian"
         android:textAllCaps="false"
         android:textColor="@color/creamy_white"
-        android:textSize="22sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.438" />
+        app:layout_constraintVertical_bias="0.407" />
 
     <TextView
         android:id="@+id/first_time"
@@ -78,47 +78,47 @@
         android:gravity="center"
         android:text="12h 15min"
         android:textAllCaps="false"
-        android:textSize="16sp"
         android:textColor="@color/creamy_white"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.499" />
+        app:layout_constraintVertical_bias="0.482" />
 
     <ImageView
         android:id="@+id/second_logo"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:scaleType="centerCrop"
         android:layout_marginBottom="1dp"
-        android:src="@drawable/rank2"
+        android:scaleType="centerCrop"
+        android:src="@drawable/yunxin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.135"
+        app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.456" />
+        app:layout_constraintVertical_bias="0.389" />
 
     <TextView
         android:id="@+id/second_name"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:elevation="8dp"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="1dp"
+        android:elevation="8dp"
         android:fontFamily="@font/carterone"
         android:gravity="center"
-        android:text="梁恺诚"
+        android:text="Yunxin Xu"
         android:textAllCaps="false"
         android:textColor="@color/creamy_white"
-        android:textSize="22sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.545" />
+        app:layout_constraintVertical_bias="0.516" />
 
     <TextView
         android:id="@+id/second_time"
@@ -131,14 +131,14 @@
         android:gravity="center"
         android:text="11h 48min"
         android:textAllCaps="false"
-        android:textSize="16sp"
         android:textColor="@color/creamy_white"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.115"
+        app:layout_constraintHorizontal_bias="0.096"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.603" />
+        app:layout_constraintVertical_bias="0.588" />
 
     <ImageView
         android:id="@+id/third_logo"
@@ -152,26 +152,26 @@
         app:layout_constraintHorizontal_bias="0.864"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.543" />
+        app:layout_constraintVertical_bias="0.45" />
 
     <TextView
         android:id="@+id/third_name"
         android:layout_width="100dp"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="1dp"
         android:elevation="8dp"
         android:fontFamily="@font/carterone"
         android:gravity="center"
-        android:text="郑人铭"
+        android:text="Renming Zheng"
         android:textAllCaps="false"
         android:textColor="@color/creamy_white"
-        android:textSize="22sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.884"
+        app:layout_constraintHorizontal_bias="0.887"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.627" />
+        app:layout_constraintVertical_bias="0.586" />
 
     <TextView
         android:id="@+id/third_time"
@@ -188,33 +188,33 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.884"
+        app:layout_constraintHorizontal_bias="0.887"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.685" />
+        app:layout_constraintVertical_bias="0.656" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginTop="1dp"
+        android:layout_marginEnd="20dp"
         android:background="@drawable/name_text"
         android:backgroundTint="#FFB380"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.072" />
+        app:layout_constraintVertical_bias="0.045" />
 
     <TextView
         android:id="@+id/person_price"
         android:layout_width="90dp"
         android:layout_height="90dp"
         android:layout_marginStart="40dp"
-        android:layout_marginEnd="280dp"
         android:layout_marginTop="1dp"
+        android:layout_marginEnd="280dp"
         android:background="@drawable/name_text"
         android:backgroundTint="#FF9B57"
         android:elevation="8dp"
@@ -228,18 +228,18 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.09" />
+        app:layout_constraintVertical_bias="0.068" />
 
     <TextView
         android:id="@+id/person_time"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_marginStart="145dp"
-        android:layout_marginEnd="35dp"
         android:layout_marginTop="1dp"
+        android:layout_marginEnd="35dp"
         android:fontFamily="@font/buenard"
         android:gravity="center"
-        android:text="You are doing better than 60% of other players!"
+        android:text="You are doing better than 60% of other friends!"
         android:textColor="@color/creamy_white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -247,6 +247,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.072" />
+        app:layout_constraintVertical_bias="0.045" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
