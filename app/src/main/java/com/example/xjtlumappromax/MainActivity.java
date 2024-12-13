@@ -36,14 +36,11 @@ public class MainActivity extends AppCompatActivity {
         try {
             db = dbHelper.getDatabase();
 
-            // 创建查询助手对象
             DatabaseQueryHelper queryHelper = new DatabaseQueryHelper(db);
 
             List<String> result = queryHelper.getAllDataFromTable("Profile_and_Interests", "Name");
-
-            // 输出查询结果
             for (String data : result) {
-                Log.d(TAG, "Data为: " + data);
+                Log.d(TAG, "Data is: " + data);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,19 +62,14 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
 
-
-
     }
-
-
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (db != null && db.isOpen()) {
-            db.close();  // 关闭数据库
-            Log.i("DDDB","数据库删除destroy");
+            db.close();
         }
     }
 }

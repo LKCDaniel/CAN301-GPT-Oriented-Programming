@@ -52,7 +52,6 @@ public class introActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // 释放数据库资源
         if (dbHelper != null) {
             dbHelper.close();
         }

@@ -19,9 +19,9 @@ import java.util.Map;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 
-    private static final String DB_NAME = "CAN301.sqlite";  // 数据库文件名
-    private static DatabaseHelper instance;  // 单例实例
-    private static SQLiteDatabase database;  // 全局数据库实例
+    private static final String DB_NAME = "CAN301.sqlite";  // database name
+    private static DatabaseHelper instance;  //Only one instance
+    private static SQLiteDatabase database;  // Global database instance
     private final Context myContext;
 
     public DatabaseHelper(Context context) {
@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    // 获取单例实例
+    //synchronization
     public static synchronized DatabaseHelper getInstance(Context context) {
         if (instance == null) {
             instance = new DatabaseHelper(context.getApplicationContext());
@@ -50,29 +50,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // 在这里创建表，如果需要的话
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // 处理数据库升级的逻辑
+    //Database Update
     }
 
-    // 检查数据库是否已存在
+    // check if database already exists
     public boolean checkDatabase() {
         File dbFile = myContext.getDatabasePath(DB_NAME);
         return dbFile.exists();
     }
 
-    // 创建数据库，如果不存在则复制它
+    // Create the database and copy it if it does not exist
     public void createDatabase() throws IOException {
         boolean dbExist = checkDatabase();
         if (dbExist) {
             Log.d("DatabaseHelper", "Database already exists.");
         } else {
-            this.getReadableDatabase();  // 创建数据库文件
+            this.getReadableDatabase();
             try {
-                copyDatabase();  // 复制数据库
+                copyDatabase();
                 Log.d("DatabaseHelper", "Database copied from assets.");
             } catch (IOException e) {
                 Log.e("DatabaseHelper", "Error copying database", e);
@@ -81,7 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // 复制数据库文件到应用的数据库目录
+    // Copy the database file to the application's database directory
     private void copyDatabase() throws IOException {
         AssetManager assetManager = myContext.getAssets();
         InputStream myInput = assetManager.open(DB_NAME);
@@ -99,15 +98,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         myInput.close();
     }
 
-    // 打开数据库
+
     public SQLiteDatabase openDatabase() throws SQLException {
         String dbPath = myContext.getDatabasePath(DB_NAME).getPath();
-        Log.i("dbPath数据库为",dbPath);
+        Log.i("dbPath of database is", dbPath);
         SQLiteDatabase db;
         try {
             db = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
-            Log.i("dbPath数据库为", String.valueOf(db));
-
         } catch (SQLException e) {
             Log.e("DatabaseHelper", "Error opening database", e);
             throw new SQLException("Error opening database", e);
@@ -116,10 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-
-
-
-    // 关闭数据库
+    // prevent lacking of data
     @Override
     public synchronized void close() {
         if (database != null) {

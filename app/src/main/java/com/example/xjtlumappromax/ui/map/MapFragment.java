@@ -47,8 +47,8 @@ import java.util.Map;
 
 public class MapFragment extends Fragment {
 
-    //按钮
-    Spinner teacherSpinner; // 声明为全局变量
+    //Initialization
+    Spinner teacherSpinner;
     SearchView searchView;
     Button searchButton;
 
@@ -59,8 +59,6 @@ public class MapFragment extends Fragment {
         return instance;
     }
 
-
-    //原有的数据库
     private SQLiteDatabase database;
 
 
@@ -160,16 +158,15 @@ public class MapFragment extends Fragment {
         try {
             DatabaseHelper dbHelper = DatabaseHelper.getInstance(context); // 获取单例实例
             database = dbHelper.getDatabase(); // 获取全局数据库实例
-            Log.i("database数据库", "数据库成功初始化");
+            Log.i("database", "Successfully Initialization");
         } catch (IOException e) {
-            Log.e("database数据库", "初始化数据库失败", e);
+            Log.e("database", "Fall Initialization", e);
         }
 
 
-        // 测试模糊查询
+        // Fuzzy search
         List<String> testname = fuzzySearchName("Li");
-        Log.i("数据库测试结果", testname.toString());
-        // 如果 Logcat 中出现了 "[Dawei Liu, Lijie Yao, Lingyun Yu, Nanlin Jin]"，说明成功
+        Log.i("Database test result", testname.toString());
     }
 
 
@@ -181,33 +178,24 @@ public class MapFragment extends Fragment {
         //View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         View root = binding.getRoot();
 
-        /*
-        // 搜索按钮
-        searchButton = rootView.findViewById(R.id.searchButton);
-        searchView = rootView.findViewById(R.id.searchView);
-        teacherSpinner = rootView.findViewById(R.id.teacherSpinner);
-*/
 
-        // 通过 binding 获取控件
         searchButton = binding.searchButton;
         searchView = binding.searchView;
         teacherSpinner = binding.teacherSpinner;
 
-        Log.i("Button状态", searchButton == null ? "searchButton 未找到" : "searchButton 已初始化");
-        Log.i("Button STA", searchButton == null ? "searchButton NO OK" : "searchButton OK!!!");
+        Log.i("Button status", searchButton == null ? "searchButton Not find " : "searchButton Finish");
 
-// 设置搜索按钮点击事件
-// 设置搜索按钮点击事件 (使用 Lambda 表达式)
+
         searchButton.setOnClickListener(v -> {
-            String query = searchView.getQuery().toString().trim(); // 获取并去除首尾空格
-            Log.i("searchButton语句为", query.toString());
+            String query = searchView.getQuery().toString().trim();
+            Log.i("searchButton query is", query.toString());
 
             if (!query.isEmpty()) {
-                List<String> results = fuzzySearchName(query); // 调用模糊查询方法
-                Log.i("searchButton结果", results.toString());
-                updateTeacherSpinner(results); // 更新 Spinner 的数据
+                List<String> results = fuzzySearchName(query);
+                Log.i("searchButton result", results.toString());
+                updateTeacherSpinner(results);
             } else {
-                Toast.makeText(getContext(), "Type content to search", Toast.LENGTH_SHORT).show(); // 提示用户输入
+                Toast.makeText(getContext(), "Type content to search", Toast.LENGTH_SHORT).show();
             }
         });
 

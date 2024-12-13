@@ -21,43 +21,37 @@ public class TeacherBasicInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // 初始化 ViewBinding
         binding = TeacherBasicInfoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // 设置 ActionBar 中的返回按钮
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
-            getSupportActionBar().setHomeButtonEnabled(true);  // 启用返回按钮的点击事件
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-        // 获取 Intent 中传递的数据
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
         String position = intent.getStringExtra("position");
         String email = intent.getStringExtra("email");
-        String photoUrl = intent.getStringExtra("photo"); // 例如 "http://example.com/jianjun_chen.jpg"
+        String photoUrl = intent.getStringExtra("photo");
         String detailsUrl = intent.getStringExtra("details");
 
-        Log.i("啊啊啊",position);
-        // 设置数据到 UI 组件
+
         binding.nameText.setText(name != null ? name : "N/A");
         binding.positionText.setText(position != null ? position : "N/A");
         binding.emailText.setText(email != null ? email : "N/A");
 
-        // 加载教师照片使用 Glide
+        // Use Glide to load picture
         if (photoUrl != null && !photoUrl.isEmpty()) {
             Glide.with(this)
                     .load(photoUrl)
-                    .placeholder(R.drawable.placeholder_photo) // 占位图
-                    .error(R.drawable.placeholder_photo) // 错误图
+                    .placeholder(R.drawable.placeholder_photo) // default
+                    .error(R.drawable.placeholder_photo) // default
                     .into(binding.teacherPhoto);
         } else {
-            // 如果 photoUrl 为空，使用占位图
             binding.teacherPhoto.setImageResource(R.drawable.placeholder_photo);
         }
 
-        // 设置 "View More Details" 按钮点击事件
         binding.viewMore.setOnClickListener(v -> {
             if (detailsUrl != null && !detailsUrl.isEmpty()) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(detailsUrl));
@@ -67,14 +61,12 @@ public class TeacherBasicInfoActivity extends AppCompatActivity {
             }
         });
 
-        // 设置返回按钮点击事件
         binding.back.setOnClickListener(v -> finish());
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            // 触发返回操作
             onBackPressed();
             return true;
         }

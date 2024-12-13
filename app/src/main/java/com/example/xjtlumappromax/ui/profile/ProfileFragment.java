@@ -44,7 +44,7 @@ public class ProfileFragment extends Fragment {
 
         // Get Location from MapFragment using Singleton
         MapFragment mapFragment = MapFragment.getInstance();
-        String location = mapFragment.getLocationName();  // 获取位置
+        String location = mapFragment.getLocationName();
         locationEditText.setText("Location: " + location);  // Update location field (non-editable)
 
         // Set click listener for the save button

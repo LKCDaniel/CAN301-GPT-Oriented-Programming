@@ -56,14 +56,11 @@ public class loginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password);
         forgetTextView = findViewById(R.id.forget);
         loginButton = findViewById(R.id.letgo_button);
-        // 初始化状态
-        loginButton.setEnabled(false); // 初始时按钮禁用
-        forgetTextView.setVisibility(View.GONE); // 初始时隐藏 forget
+        // initialization
+        loginButton.setEnabled(false);
+        forgetTextView.setVisibility(View.GONE);
 
-//        // 测试专用（上线记得注释掉！）
-//        usernameEditText.setText("Bird");
-//        passwordEditText.setText("123456");
-//        loginButton.setEnabled(true);
+
 
         // 添加 TextWatcher 来监听用户名和密码的输入变化
         usernameEditText.addTextChangedListener(inputWatcher);
@@ -79,7 +76,7 @@ public class loginActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("username", username);
-                editor.apply();  // 保存数据
+                editor.apply();
 
                 Intent intent = new Intent(loginActivity.this, MainActivity.class);
                 intent.putExtra("username", username);
@@ -88,42 +85,36 @@ public class loginActivity extends AppCompatActivity {
         });
     }
 
-    // 实时监听输入框的文本变化
     private final TextWatcher inputWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-            // 不需要实现
         }
 
         @Override
         public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-            // 获取用户名和密码的输入状态
             String username = usernameEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
 
-            // 判断是否都已输入，若是，显示按钮并隐藏 forget
             if (!username.isEmpty() && !password.isEmpty()) {
-                loginButton.setEnabled(true);  // 启用按钮
-                forgetTextView.setVisibility(View.GONE); // 隐藏 forget 提示
+                loginButton.setEnabled(true);
+                forgetTextView.setVisibility(View.GONE);
 
             } else {
                 loginButton.setEnabled(false); // 禁用按钮
                 if (username.isEmpty() || password.isEmpty()) {
-                    forgetTextView.setVisibility(View.VISIBLE); // 显示 forget 提示
+                    forgetTextView.setVisibility(View.VISIBLE);
                 }
             }
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
-            // 不需要实现
         }
     };
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // 释放数据库资源
         if (dbHelper != null) {
             dbHelper.close();
         }

@@ -51,18 +51,15 @@ public class ChatFragment extends Fragment {
         binding = FragmentChatBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // 初始化控件和变量
         client = new OkHttpClient();
         messageList = new ArrayList<>();
         messageAdapter = new MessageAdapter(messageList);
 
-        // RecyclerView 设置
         binding.recyclerView.setAdapter(messageAdapter);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setStackFromEnd(true);
         binding.recyclerView.setLayoutManager(llm);
 
-        // 设置按钮点击事件
         binding.sendBtn.setOnClickListener((v) -> {
             String question = binding.messageEditText.getText().toString().trim();
             addToChat(question, Message.SENT_BY_ME);

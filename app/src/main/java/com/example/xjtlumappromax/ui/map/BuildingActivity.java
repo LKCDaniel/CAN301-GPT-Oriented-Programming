@@ -250,7 +250,6 @@ public class BuildingActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            // 触发返回操作
             onBackPressed();
             return true;
         }
@@ -310,15 +309,12 @@ public class BuildingActivity extends AppCompatActivity {
         binding = ActivityBuildingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // 初始化 DatabaseHelper 和 SQLiteDatabase
         try {
-            // 获取单例 DatabaseHelper
             dbHelper = DatabaseHelper.getInstance(this);
-            database = dbHelper.getDatabase(); // 获取全局共享的数据库实例
+            database = dbHelper.getDatabase(); // Gets a globally shared database instance
             Log.i(TAG, "Database initialized successfully.");
         } catch (IOException e) {
             Log.e(TAG, "Error initializing database", e);
-            // 这里可以选择终止应用或显示错误信息给用户
             return;
         }
 
@@ -328,15 +324,12 @@ public class BuildingActivity extends AppCompatActivity {
         }
 
 
-
-
-
         binding = ActivityBuildingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
-            getSupportActionBar().setHomeButtonEnabled(true);  // 启用返回按钮的点击事件
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
         }
 
         mVisible = true;
@@ -408,16 +401,15 @@ public class BuildingActivity extends AppCompatActivity {
             }
         });
 
-        // 设置房间点击监听器
         map.setOnBoundClickListener(room -> {
             Log.i(TAG, "Room " + room + " clicked");
 
             List<String> columnsToFetch = Arrays.asList("Name", "Position", "Email", "Photo URL", "Scholar URL");
             Map<String, String> teacherInfo = fetchDataByCondition
                     ("Teachers_Basic_Information",
-                    columnsToFetch,
-                    "Location",
-                    "SD"+room);
+                            columnsToFetch,
+                            "Location",
+                            "SD" + room);
 
             String name = teacherInfo.get("Name");
             String position = teacherInfo.get("Position");
@@ -425,7 +417,6 @@ public class BuildingActivity extends AppCompatActivity {
             String photo = teacherInfo.get("Photo URL");
             String details = teacherInfo.get("Scholar URL");
 
-            // 这里可以添加逻辑，显示教师信息
             Log.i(TAG, "Name: " + name);
             Log.i(TAG, "Position: " + position);
             Log.i(TAG, "Email: " + email);
@@ -434,7 +425,6 @@ public class BuildingActivity extends AppCompatActivity {
 
 
             if (name == null || position == null || email == null || photo == null || details == null) {
-                // 启动 TeacherBasicInfoActivity 并传递数据
                 Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
                 intent.putExtra("name", "XJTLU Member");
                 intent.putExtra("position", "N/A");
@@ -442,9 +432,7 @@ public class BuildingActivity extends AppCompatActivity {
                 intent.putExtra("photo", "N/A");
                 intent.putExtra("details", "https://xjtlu.edu.cn/");
                 startActivity(intent);
-            }
-else {
-                // 启动 TeacherBasicInfoActivity 并传递数据
+            } else {
                 Intent intent = new Intent(BuildingActivity.this, TeacherBasicInfoActivity.class);
                 intent.putExtra("name", name);
                 intent.putExtra("position", position);
@@ -466,32 +454,29 @@ else {
 
 
     /**
-     * 通用查询方法，返回指定表和列的数据，基于单个条件。
+     * Generic query method that returns data for
+     * specified tables and columns, based on a single condition.
      *
-     * @param tableName       要查询的表名。
-     * @param columns         要查询的列的列表。
-     * @param conditionColumn 用于条件判断的列名。
-     * @param conditionValue  条件列的值。
-     * @return 包含查询结果的映射，键为列名，值为对应的数据。
+     * @param tableName       Name of the table to be queried.
+     * @param columns         A list of columns to query.
+     * @param conditionColumn Column name used for conditional judgment.
+     * @param conditionValue  The value of the condition column.
+     * @return A map that contains query results, with the key being the column name and the value being the corresponding data.
      */
     public Map<String, String> fetchDataByCondition(String tableName, List<String> columns, String conditionColumn, String conditionValue) {
         Map<String, String> result = new HashMap<>();
         Cursor cursor = null;
         try {
-            // 通过在列名周围添加双引号来处理列名中的空格
             List<String> escapedColumns = new ArrayList<>();
             for (String col : columns) {
                 escapedColumns.add("\"" + col + "\"");
             }
             String columnsList = String.join(", ", escapedColumns);
 
-            // 处理条件列名
             String escapedConditionColumn = "\"" + conditionColumn + "\"";
 
-            // 处理表名
             String escapedTableName = "\"" + tableName + "\"";
 
-            // 构建查询语句
             String query = "SELECT " + columnsList + " FROM " + escapedTableName + " WHERE " + escapedConditionColumn + " = ?";
             cursor = database.rawQuery(query, new String[]{conditionValue});
 
