@@ -51,7 +51,6 @@ public class loginActivity extends AppCompatActivity {
             return insets;
         });
 
-        // 获取控件
         usernameEditText = findViewById(R.id.username);
         passwordEditText = findViewById(R.id.password);
         forgetTextView = findViewById(R.id.forget);
@@ -62,7 +61,6 @@ public class loginActivity extends AppCompatActivity {
 
 
 
-        // 添加 TextWatcher 来监听用户名和密码的输入变化
         usernameEditText.addTextChangedListener(inputWatcher);
         passwordEditText.addTextChangedListener(inputWatcher);
 
@@ -100,7 +98,7 @@ public class loginActivity extends AppCompatActivity {
                 forgetTextView.setVisibility(View.GONE);
 
             } else {
-                loginButton.setEnabled(false); // 禁用按钮
+                loginButton.setEnabled(false);
                 if (username.isEmpty() || password.isEmpty()) {
                     forgetTextView.setVisibility(View.VISIBLE);
                 }
